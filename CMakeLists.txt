@@ -1,0 +1,30 @@
+cmake_minimum_required(VERSION 3.7)
+project(GAPI)
+
+#CMAKE_SOURCE_DIR correspond a l'emplacement du fichier CMakeLists.txt (donc plus ou moins le dossier du projet), donc si on l'utilise avec la forme ${CMAKE_SOURCE_DIR} ca donne le chemin absolu vers le dossier
+#CMAKE_MODULE_PATH correspond a où sont les .cmake
+set(RESSOURCES_PATH /Users/nathan/Programmation/ressources)
+set(CMAKE_MODULE_PATH ${RESSOURCES_PATH}/CMake)
+#dans le fichier FindSDL2.cmake vers le debut le "SET(SDL2_SEARCH_PATHS ... ${SDL2_PATH})" cherche un peut partout dans macOS et linux et permet a windows de definir où chercher en donnant une valeur à SDL2_PATH, ce que je fait a la ligne suivante
+#set(SDL2_PATH ${CMAKE_SOURCE_DIR}/SDL2)#j'ai aussi mit la SDL dans le dossier principale par simplicité mais tu peut juste lui dire où elle est dans ton ordi si tu prefère
+#set(SDL2_IMAGE_PATH ${CMAKE_SOURCE_DIR}/SDL2_image/x86_64-w64-mingw32)#ici pareil pour SDLimage (attention il faut donner le nom du dossier qui contient les dossier headers et lib)
+
+find_package(SDL2)#ici je lui dit de charger le fichier FindSDL2.cmake
+find_package(SDL2_image)#ici je lui dit de charger le fichier FindSDL2_image.cmake  (en gros c'est find_package(nomLib) et ca cherche "Find+nomLib+.cmake")
+find_package(OPENGL)
+#les .cmake vont créer plein de racoursis crossplateform pour nous que l'on utilise ensuite
+include_directories(${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIR} ${RESSOURCES_PATH})#ici je lui dit ou sont les headers avec les valeurs fourni par les .cmake charger juste avant (tu trouve les nom dans les .cmake au niveau du "FIND_PATH(SDL2_INCLUDE_DIR SDL.h ...)" c'est le nom juste après FIND_PATH)
+
+set(CMAKE_CXX_STANDARD 11)#la je ne suis pas sur mais je pense que ca active C++11
+
+set(CMAKE_CXX_FLAGS_DEBUG "-DDEBUG")
+#if(CMAKE_BUILD_TYPE MATCHES Debug)
+#    target_compile_definitions(XML_Parser PUBLIC DEBUG=1)
+#elseif(CMAKE_BUILD_TYPE MATCHES Release)
+#    target_compile_definitions(XML_Parser PUBLIC DEBUG=0)
+#endif()
+
+set(SOURCE_FILES main.cpp Camera.cpp Colour.cpp Event.cpp Fen2.cpp Fenetre.cpp Frame.cpp FrameBuffer.cpp Frustum.cpp GLWindow.cpp Keyboard.cpp Mouse.cpp Network.cpp Object.cpp Shader.cpp Sound.cpp Texture.cpp Thread.cpp Vec.cpp Window.cpp ResourcePath.mm)#ici on met tout les cpp qu'il faut compiler (ca ajoute normalement tout seul si tu creer les fichier directe dans CLion mais si tu en rajoute a la main ca va etre la qu'il faut les mettre je pense, les un après les autres séparés par un espace)
+add_executable(GAPI ${SOURCE_FILES})#la ca dit le nom qu'aura l'éxécutable puis les sources (cpp) qu'il doit utiliser (un peut comme g++ -o nomExecutable fichier1.cpp fichier2.cpp ...)
+
+target_link_libraries(GAPI ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARY} ${OPENGL_LIBRARY})#ici je lui dit à quel
