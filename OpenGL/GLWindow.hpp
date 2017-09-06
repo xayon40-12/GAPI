@@ -9,7 +9,7 @@
 #ifndef GLWindows_hpp
 #define GLWindows_hpp
 
-#include "Window.hpp"
+#include "../SDL/Window.hpp"
 #include <SDL2/SDL_opengl.h>
 
 class GLWindow : public Window {
@@ -21,7 +21,7 @@ protected:
     SDL_GLContext context;
     int major, minor;
     
-    void create();
+    virtual void create();
 public:
     GLWindow(std::string title, int width, int height, bool visible = true, int major = 2, int minor = 1);
     ~GLWindow();

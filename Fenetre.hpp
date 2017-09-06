@@ -10,15 +10,15 @@
 #define Fenetre_hpp
 
 #include <iostream>
-#include "GLWindow.hpp"
-#include "Keyboard.hpp"
-#include "Mouse.hpp"
-#include "Shader.hpp"
-#include "Texture.hpp"
-#include "FrameBuffer.hpp"
-#include "Camera.hpp"
-#include "Object.hpp"
-#include "Frustum.hpp"
+#include "OpenGL/GLWindow.hpp"
+#include "SDL/Keyboard.hpp"
+#include "SDL/Mouse.hpp"
+#include "OpenGL/Shader.hpp"
+#include "OpenGL/Texture.hpp"
+#include "OpenGL/FrameBuffer.hpp"
+#include "OpenGL/Camera.hpp"
+#include "OpenGL/Object.hpp"
+#include "OpenGL/Frustum.hpp"
 
 class Fenetre : public GLWindow{
 private:

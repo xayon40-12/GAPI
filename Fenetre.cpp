@@ -8,11 +8,6 @@
 
 #include "Fenetre.hpp"
 
-#ifdef __APPLE__
-#include "ResourcePath.hpp"
-#else
-#define resourcePath() std::string()
-#endif
 
 #ifdef DEBUG
 #define debugPath std::string("../")
@@ -20,8 +15,8 @@
 #define debugPath std::string("")
 #endif
 
-#define shadersPath resourcePath()+debugPath+"resources/shaders/"
-#define imagesPath resourcePath()+debugPath+"resources/images/"
+#define shadersPath debugPath+"resources/shaders/"
+#define imagesPath debugPath+"resources/images/"
 
 Fenetre::Fenetre(std::string title, int width, int height, int major, int minor):
     GLWindow(title, width, height, true, major, minor),

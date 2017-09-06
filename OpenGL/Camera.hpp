@@ -11,8 +11,8 @@
 
 #include <map>
 
-#include "Keyboard.hpp"
-#include "Mouse.hpp"
+#include "../SDL/Keyboard.hpp"
+#include "../SDL/Mouse.hpp"
 #include "Frame.hpp"
 
 enum CameraMouseMouve {MOUSEX, MOUSEY, WHEELX, WHEELY, KEYBOARD};

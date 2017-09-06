@@ -24,10 +24,10 @@ protected:
     bool visible;
     bool closed;
     
-    void create();
-    Window(bool GL, std::string title, int width, int height, bool visible = true);
+    virtual void create();
+    //Window(bool GL, std::string title, int width, int height, bool visible = true);
 public:
-    Window(std::string title, int width, int height, bool visible = true);
+    Window(std::string title, int width, int height, bool visible = true, bool GL = false);
     virtual ~Window();
     
     void setTitle(std::string title);

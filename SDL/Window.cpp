@@ -7,14 +7,14 @@
 //
 
 #include "Window.hpp"
-#include "GLWindow.hpp"
+#include "../OpenGL/GLWindow.hpp"
 
-Window::Window(std::string title, int width, int height, bool visible) : win(0), winID(0), renderer(0), title(title), width(width), height(height), visible(visible), closed(false){
-    
-    create();
+Window::Window(std::string title, int width, int height, bool visible, bool GL) : win(0), winID(0), renderer(0), title(title), width(width), height(height), visible(visible), closed(false){
+    if(!GL)
+        create();
 }
-Window::Window(bool GL, std::string title, int width, int height, bool visible) : win(0), winID(0), renderer(0), title(title), width(width), height(height), visible(visible), closed(false){
-}
+//Window::Window(bool GL, std::string title, int width, int height, bool visible) : win(0), winID(0), renderer(0), title(title), width(width), height(height), visible(visible), closed(false){
+//}
 
 Window::~Window(){
     windows.erase(winID);

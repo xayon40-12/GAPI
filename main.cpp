@@ -3,7 +3,7 @@
 #include <iostream>
 #include <memory>
 
-#include "Thread.hpp"
+#include "Tools/Thread.hpp"
 
 class P: public Thread{
 private:

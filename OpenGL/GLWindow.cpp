@@ -22,7 +22,7 @@ void GLWindow::initOpenGL(int major, int minor){
     s_glInit = true;
 }
 
-GLWindow::GLWindow(std::string title, int width, int height, bool visible, int major, int minor) :Window(true, title, width, height, visible), major(major), minor(minor){
+GLWindow::GLWindow(std::string title, int width, int height, bool visible, int major, int minor) :Window(title, width, height, visible, true), major(major), minor(minor){
     create();
 }
 

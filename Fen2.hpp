@@ -9,9 +9,9 @@
 #ifndef Fen2_hpp
 #define Fen2_hpp
 
-#include "Window.hpp"
-#include "Keyboard.hpp"
-#include "Mouse.hpp"
+#include "SDL/Window.hpp"
+#include "SDL/Keyboard.hpp"
+#include "SDL/Mouse.hpp"
 
 class Fen2 : public Window{
 private:

@@ -9,7 +9,7 @@
 #include "Texture.hpp"
 
 int Texture::count = 0;
-std::map<std::string, texSave> Texture::savedTextures;
+std::unordered_map<std::string, texSave> Texture::savedTextures;
 
 Texture::Texture(std::string imageFile, GLuint minFilter, GLuint magFilter): id(0), textureIndex(0), imageFile(imageFile), width(0), height(0), format(0), internalFormat(0), minFilter(minFilter), magFilter(magFilter), emptyTexture(false){
     count++;
