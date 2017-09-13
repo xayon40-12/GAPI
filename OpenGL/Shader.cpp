@@ -108,7 +108,7 @@ bool Shader::linkProgram(){
     glAttachShader(programID, vertexID);
     if(sourceGeometry != "") glAttachShader(programID, geometryID);
     glAttachShader(programID, fragmentID);
-    for(int i = 0;i<glslData.size();i++)
+    for(GLuint i = 0;i<glslData.size();i++)
         glBindAttribLocation(programID, i, glslData[i].name.c_str());
     glLinkProgram(programID);
     GLint erreurLink(0);
@@ -150,7 +150,7 @@ bool Shader::reload(){
         
         glBufferData(GL_ARRAY_BUFFER, cum[glslData.size()], 0, GL_STATIC_DRAW);
         for(int i = 0;i<glslData.size();i++)
-            glBufferSubData(GL_ARRAY_BUFFER, cum[i], glslData[i].dataArray.size()*sizeof(float), glslData[i].dataArray.data());
+            glBufferSubData(GL_ARRAY_BUFFER, cum[i], (GLsizeiptr) (glslData[i].dataArray.size() * sizeof(float)), glslData[i].dataArray.data());
         
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         
@@ -160,7 +160,7 @@ bool Shader::reload(){
             glGenBuffers(1, &iboID);
             
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboID);
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicies.size() * sizeof(GLuint), indicies.data(), GL_STATIC_DRAW);
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER, (GLsizeiptr) (indicies.size() * sizeof(GLuint)), indicies.data(), GL_STATIC_DRAW);
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         }
         
@@ -170,7 +170,7 @@ bool Shader::reload(){
         glBindVertexArray(vaoID);
         
         glBindBuffer(GL_ARRAY_BUFFER, vboID);
-        for(int i = 0;i<glslData.size();i++){
+        for(GLuint i = 0;i<glslData.size();i++){
             glVertexAttribPointer(i, glslData[i].dataLength, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(cum[i]));
             glEnableVertexAttribArray(i);
         }

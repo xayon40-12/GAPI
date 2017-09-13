@@ -240,11 +240,11 @@ void Texture::horizontalReverse(){
 
 void Texture::use(int textureIndex){
     this->textureIndex = textureIndex;
-    glActiveTexture(GL_TEXTURE0 + textureIndex);
+    glActiveTexture((GLenum)(GL_TEXTURE0 + textureIndex));
     glBindTexture(GL_TEXTURE_2D, id);
 }
 void Texture::remove(){
-    glActiveTexture(GL_TEXTURE0 + textureIndex);
+    glActiveTexture((GLenum)(GL_TEXTURE0 + textureIndex));
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 

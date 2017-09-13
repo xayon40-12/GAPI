@@ -17,8 +17,8 @@ class FrameBuffer
 {
 private:
     GLuint id;
-    float width;
-    float height;
+    int width;
+    int height;
     std::vector<Texture> colourBuffers;
     Texture depthBuffer;
     int nbColourBuffers;

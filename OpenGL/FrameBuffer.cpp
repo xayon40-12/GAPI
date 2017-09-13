@@ -53,8 +53,8 @@ bool FrameBuffer::create(){
     
     GLenum drawBuffers[nbColourBuffers];
     for(int i = 0;i<nbColourBuffers;i++){
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0+i, GL_TEXTURE_2D, colourBuffers[i].getID(), 0);
-        drawBuffers[i] = GL_COLOR_ATTACHMENT0+i;
+        glFramebufferTexture2D(GL_FRAMEBUFFER, (GLenum)(GL_COLOR_ATTACHMENT0+i), GL_TEXTURE_2D, colourBuffers[i].getID(), 0);
+        drawBuffers[i] = (GLenum)(GL_COLOR_ATTACHMENT0+i);
     }
     glDrawBuffers(nbColourBuffers, drawBuffers);
     

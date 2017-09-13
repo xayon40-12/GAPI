@@ -351,7 +351,7 @@ Object_t Object::generateSphere(glm::vec3 position, float radius, unsigned int t
         bitangents.push_back(B.z);
     };
     
-    float PI = M_PI, PI2 = M_PI*2, step = PI/tesselation;
+    float PI = (float) M_PI, PI2 = (float) (M_PI * 2), step = PI / tesselation;
     for(int i = 0;i<=2*tesselation;i++){
         for(int j = 0;j<=tesselation;j++){
             float theta = i*step, phi = j*step;
@@ -371,8 +371,6 @@ Object_t Object::generateSphere(glm::vec3 position, float radius, unsigned int t
             }
         }
     }
-    
-    //TODO generate the sphere
     
     obj.vertices = vertices; obj.vertexLength = 3;
     obj.colours = colours; obj.colourLength = 3;

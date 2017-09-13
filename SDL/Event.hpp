@@ -37,7 +37,7 @@ protected:
     
 public:
     Event();
-    ~Event();
+    virtual ~Event();
     
     static void initWindow();
     static void endWindow();
