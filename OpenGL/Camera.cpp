@@ -42,8 +42,8 @@ void Camera::initMapping(){
 }
 
 void Camera::move(){
-    if(position != 0){
-        pos = (*position)();
+    if(attachedPosition != 0){
+        pos = (*attachedPosition)();
     }else{
         if(Keyboard::isKeyHeld(mapping[FORWARD])) pos += Z*speed.z;
         if(Keyboard::isKeyHeld(mapping[BACKWARD])) pos -= Z*speed.z;
@@ -53,8 +53,8 @@ void Camera::move(){
         if(Keyboard::isKeyHeld(mapping[DOWN])) pos -= Y*speed.y;
     }
     
-    if(target != 0){
-        lookTowardTarget((*target)(), Y);
+    if(attachedTarget != 0){
+        lookTowardTarget((*attachedTarget)(), Y);
     }else{
         inputRotate(YAW);
         inputRotate(PITCH);

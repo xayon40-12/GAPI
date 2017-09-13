@@ -12,8 +12,8 @@ bool Keyboard::isKey(State state, SDL_Keycode key){
     internalUpdate();
     auto it = keys.find(key);
     if(it != keys.end()){
-        if(it->second == PRESSED && (state == HELD || state == PRESSED)) keys[key] = HELD;
-        else if(it->second == RELEASED && (state == IDLE || state == RELEASED)) keys[key] = IDLE;
+        if(it->second == PRESSED && (state == HELD || state == PRESSED)) keys[key] = HELD;//TODO problem update should be done in event the next frame, use an array of keys to update
+        else if(it->second == RELEASED && (state == IDLE || state == RELEASED)) keys[key] = IDLE;//TODO the same
         else if(it->second != state) return false;
         return true;
     }

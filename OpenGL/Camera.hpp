@@ -15,7 +15,7 @@
 #include "../SDL/Mouse.hpp"
 #include "Frame.hpp"
 
-enum CameraMouseMouve {MOUSEX, MOUSEY, WHEELX, WHEELY, KEYBOARD};
+enum CameraMouseMove {MOUSEX, MOUSEY, WHEELX, WHEELY, KEYBOARD};
 
 class Camera : public Frame{
 private:

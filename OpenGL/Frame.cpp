@@ -9,11 +9,11 @@
 #include "Frame.hpp"
 
 
-Frame::Frame() : target(0), position(0), pos(0, 0, 0), scale(1){
+Frame::Frame() : attachedTarget(0), attachedPosition(0), pos(0, 0, 0), scale(1){
     
     lookTowardTarget(glm::vec3(0, 0, 1), glm::vec3(0, 1, 0));
 }
-Frame::Frame(glm::vec3 position, glm::vec3 target, glm::vec3 verticalAxis, glm::vec3 speed, glm::vec3 rotationSpeed, float scale) : target(0), position(0), speed(speed), rotationSpeed(rotationSpeed), pos(position), scale(scale){
+Frame::Frame(glm::vec3 position, glm::vec3 target, glm::vec3 verticalAxis, glm::vec3 speed, glm::vec3 rotationSpeed, float scale) : attachedTarget(0), attachedPosition(0), speed(speed), rotationSpeed(rotationSpeed), pos(position), scale(scale){
     
     lookTowardTarget(target, verticalAxis);
 }
@@ -22,11 +22,11 @@ Frame::~Frame(){
 }
 
 void Frame::update(){
-    if(position != 0)
-        pos = (*position)();
+    if(attachedPosition != 0)
+        pos = (*attachedPosition)();
     
-    if(target != 0)
-        lookTowardTarget((*target)(), Y);
+    if(attachedTarget != 0)
+        lookTowardTarget((*attachedTarget)(), Y);
 }
 void Frame::move(FrameMove direction, float time){
     if(direction == FORWARD) pos += Z*time*speed.z;
@@ -83,23 +83,23 @@ void Frame::lookTowardTarget(glm::vec3 target, glm::vec3 verticalAxis){
     Y = glm::cross(Z, X);
 }
 void Frame::attachTarget(glm::vec3 (*target)()){
-    this->target = target;
+    this->attachedTarget = target;
 }
 void Frame::dettachTarget(){
-    target = 0;
+    attachedTarget = 0;
 }
 bool Frame::targetAttached(){
-    return target == 0;
+    return attachedTarget == 0;
 }
 
 void Frame::attachPosition(glm::vec3 (*position)()){
-    this->position = position;
+    this->attachedPosition = position;
 }
 void Frame::dettachPosition(){
-    position = 0;
+    attachedPosition = 0;
 }
 bool Frame::positionAttached(){
-    return position == 0;
+    return attachedPosition == 0;
 }
 
 void Frame::setPosition(glm::vec3 position){

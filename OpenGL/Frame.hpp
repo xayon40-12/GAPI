@@ -20,8 +20,8 @@ enum FrameMove {UP, DOWN, LEFT, RIGHT, FORWARD, BACKWARD, YAW, PITCH, ROLL};
 
 class Frame{
 protected:
-    glm::vec3 (*target)();
-    glm::vec3 (*position)();
+    glm::vec3 (*attachedTarget)();
+    glm::vec3 (*attachedPosition)();
     
     glm::vec3 pos;
     glm::vec3 speed;
@@ -34,7 +34,7 @@ protected:
 public:
     Frame();
     Frame(glm::vec3 position, glm::vec3 target, glm::vec3 verticalAxis, glm::vec3 speed, glm::vec3 rotationSpeed, float scale = 1);
-    ~Frame();
+    virtual ~Frame();
     
     void update();//change position and look toward target if they are attached
     void move(FrameMove direction, float time = 1);//uses speed which is multiplyed by "time"
@@ -49,11 +49,11 @@ public:
     virtual glm::mat4 toMatrix();//return the matrix of the coordinate system
     
     virtual void lookTowardTarget(glm::vec3 target, glm::vec3 verticalAxis);
-    void attachTarget(glm::vec3 (*target)());//automaticaly look toward the target when update()
+    void attachTarget(glm::vec3 (*target)());//automaticaly look toward the attachedTarget when update()
     void dettachTarget();
     bool targetAttached();
     
-    void attachPosition(glm::vec3 (*position)());//automaticaly positioning to "position" when update()
+    void attachPosition(glm::vec3 (*position)());//automaticaly positioning to "attachedPosition" when update()
     void dettachPosition();
     bool positionAttached();
     
