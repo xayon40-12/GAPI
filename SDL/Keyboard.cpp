@@ -9,7 +9,6 @@
 #include "Keyboard.hpp"
 
 bool Keyboard::isKey(State state, SDL_Keycode key){
-    internalUpdate();
     auto it = keys.find(key);
     if(it != keys.end()){
         if(it->second == PRESSED && (state == HELD || state == PRESSED)) toUpdatekeys[key] = HELD;//TODO problem update should be done in event the next frame, use an array of keys to update

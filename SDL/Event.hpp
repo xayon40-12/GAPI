@@ -31,22 +31,19 @@ protected:
     
     static int m_x, m_y, m_xrel, m_yrel, m_xOnScreen, m_yOnScreen, m_xWheel, m_yWheel;
     static Uint8 buttons[20];
-    static std::unordered_map<Sint32, Uint8> toUpdateButtons;// TODO use toUpdateButtons for the passage from pressed to hold and update after
+    static std::unordered_map<Sint32, Uint8> toUpdateButtons;
     static int maxButtons;
-    static std::unordered_map<Sint32, Uint8> keys;//TODO change to normal array
+    static std::unordered_map<Sint32, Uint8> keys;
     static std::unordered_map<Sint32, Uint8> toUpdatekeys;
     
-    static void internalUpdate();
-    
 public:
-    Event();
-    virtual ~Event();
+    Event();//init window.  Use a static instance of event to init and quit automaticaly the sdl (ex: at the begining of the main so it quit automaticaly when the program end)
+    virtual ~Event();//quit sdl
     
     static void initWindow();
     static void endWindow();
     
     static void update();
-    static void setAutoUpdate(bool autoUpdate);
 };
 
 #endif /* Event_hpp */

@@ -38,10 +38,6 @@ void Event::endWindow(){
     SDL_Quit();
 }
 
-void Event::internalUpdate(){
-    if(autoUpdate)
-        update();
-}
 void Event::update(){
     m_xrel = 0;
     m_yrel = 0;
@@ -54,10 +50,18 @@ void Event::update(){
         if(event.window.event == SDL_WINDOWEVENT_ENTER){
             activeWindow = event.window.windowID;
         }
-        
+
+        for(auto &k: toUpdatekeys){//updating the chages from pressed to held and released to idle for keys
+            keys[k.first] = k.second;
+        }
+        toUpdatekeys.clear();//clear the changes
         if(event.type == SDL_KEYDOWN) if(event.key.repeat == 0) keys[event.key.keysym.sym] = PRESSED;
         if(event.type == SDL_KEYUP) if(event.key.repeat == 0) keys[event.key.keysym.sym] = RELEASED;
-        
+
+        for(auto &b: toUpdateButtons){//updating the chages from pressed to held and released to idle for buttons
+            buttons[b.first] = b.second;
+        }
+        toUpdateButtons.clear();//clear the changes
         if(event.type == SDL_MOUSEBUTTONDOWN) if(event.button.button < maxButtons) buttons[event.button.button] = PRESSED;
         if(event.type == SDL_MOUSEBUTTONUP) if(event.button.button < maxButtons) buttons[event.button.button] = RELEASED;
         
@@ -73,7 +77,4 @@ void Event::update(){
         }
     }
     SDL_GetGlobalMouseState(&m_xOnScreen, &m_yOnScreen);
-}
-void Event::setAutoUpdate(bool autoUpdate){
-    Event::autoUpdate = autoUpdate;
 }

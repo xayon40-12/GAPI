@@ -9,10 +9,9 @@
 #include "Mouse.hpp"
 
 bool Mouse::isButton(State state, int button){
-    internalUpdate();
     if(button >= 0 && button < maxButtons){
-        if(buttons[button] == PRESSED && (state == HELD || state == PRESSED)) buttons[button] = HELD;
-        else if(buttons[button] == RELEASED && (state == IDLE || state == RELEASED)) buttons[button] = IDLE;
+        if(buttons[button] == PRESSED && (state == HELD || state == PRESSED)) toUpdateButtons[button] = HELD;
+        else if(buttons[button] == RELEASED && (state == IDLE || state == RELEASED)) toUpdateButtons[button] = IDLE;
         else if(buttons[button] != state) return false;
         return true;
     }
