@@ -16,7 +16,7 @@ public:
 
     void inc();
 
-    void run();
+    void run() override;
 };
 
 

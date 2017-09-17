@@ -9,23 +9,23 @@
 #include "Frame.hpp"
 
 
-Frame::Frame() : attachedTarget(0), attachedPosition(0), pos(0, 0, 0), scale(1){
+Frame::Frame() : attachedTarget(nullptr), attachedPosition(nullptr), pos(0, 0, 0), scale(1){
     
     lookTowardTarget(glm::vec3(0, 0, 1), glm::vec3(0, 1, 0));
 }
-Frame::Frame(glm::vec3 position, glm::vec3 target, glm::vec3 verticalAxis, glm::vec3 speed, glm::vec3 rotationSpeed, float scale) : attachedTarget(0), attachedPosition(0), speed(speed), rotationSpeed(rotationSpeed), pos(position), scale(scale){
+Frame::Frame(const glm::vec3 &position, const glm::vec3 &target, const glm::vec3 &verticalAxis, const glm::vec3 &speed,
+             const glm::vec3 &rotationSpeed, float scale) : attachedTarget(
+        nullptr), attachedPosition(nullptr), speed(speed), rotationSpeed(rotationSpeed), pos(position), scale(scale){
     
     lookTowardTarget(target, verticalAxis);
 }
-Frame::~Frame(){
-    
-}
+Frame::~Frame() = default;
 
 void Frame::update(){
-    if(attachedPosition != 0)
+    if(attachedPosition != nullptr)
         pos = (*attachedPosition)();
     
-    if(attachedTarget != 0)
+    if(attachedTarget != nullptr)
         lookTowardTarget((*attachedTarget)(), Y);
 }
 void Frame::move(FrameMove direction, float time){
@@ -47,7 +47,7 @@ void Frame::rotate(float yaw, float pitch, float roll){
     if(pitch != 0) rotate(X, pitch);
     if(roll != 0) rotate(Z, roll);
 }
-void Frame::rotate(glm::vec3 axis, float angle){
+void Frame::rotate(const glm::vec3 &axis, float angle){
     auto rot = glm::rotate(angle, axis);
     if(X != axis) X = glm::vec3(rot*glm::vec4(X, 0));
     if(Y != axis) Y = glm::vec3(rot*glm::vec4(Y, 0));
@@ -73,7 +73,7 @@ glm::mat4 Frame::toMatrix(){
         return glm::mat4(glm::vec4(X, 0), glm::vec4(Y, 0), glm::vec4(Z, 0), glm::vec4(pos, 1));
 }
 
-void Frame::lookTowardTarget(glm::vec3 target, glm::vec3 verticalAxis){
+void Frame::lookTowardTarget(const glm::vec3 &target, const glm::vec3 &verticalAxis){
     Y = verticalAxis;
     Y = glm::normalize(Y);
     Z = target-pos;
@@ -86,35 +86,35 @@ void Frame::attachTarget(glm::vec3 (*target)()){
     this->attachedTarget = target;
 }
 void Frame::dettachTarget(){
-    attachedTarget = 0;
+    attachedTarget = nullptr;
 }
 bool Frame::targetAttached(){
-    return attachedTarget == 0;
+    return attachedTarget == nullptr;
 }
 
 void Frame::attachPosition(glm::vec3 (*position)()){
     this->attachedPosition = position;
 }
 void Frame::dettachPosition(){
-    attachedPosition = 0;
+    attachedPosition = nullptr;
 }
 bool Frame::positionAttached(){
-    return attachedPosition == 0;
+    return attachedPosition == nullptr;
 }
 
-void Frame::setPosition(glm::vec3 position){
+void Frame::setPosition(const glm::vec3 &position){
     pos = position;
 }
 glm::vec3 Frame::getPosition(){
     return pos;
 }
-void Frame::setSpeed(glm::vec3 speed){
+void Frame::setSpeed(const glm::vec3 &speed){
     this->speed = speed;
 }
 glm::vec3 Frame::getSpeed(){
     return speed;
 }
-void Frame::setRotationSpeed(glm::vec3 rotationSpeed){
+void Frame::setRotationSpeed(const glm::vec3 &rotationSpeed){
     this->rotationSpeed = rotationSpeed;
 }
 glm::vec3 Frame::getRotationSpeed(){

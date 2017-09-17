@@ -27,10 +27,11 @@ protected:
     virtual void create();
     //Window(bool GL, std::string title, int width, int height, bool visible = true);
 public:
-    Window(std::string title, int width, int height, bool visible = true, bool GL = false);
-    virtual ~Window();
+    Window(std::string const &title, int width, int height, bool visible = true, bool GL = false);
+
+    ~Window() override;
     
-    void setTitle(std::string title);
+    void setTitle(const std::string &title);
     void setSize(int width, int height);
     void setDefaultCloseOperation(CloseOperation operation);
     
@@ -56,7 +57,7 @@ public:
     
     virtual void clear();
     
-    virtual void setColour(Colour c);
+    virtual void setColour(const Colour &c);
     
     virtual void drawRect(int x, int y, int w, int h);
     virtual void fillRect(int x, int y, int w, int h);

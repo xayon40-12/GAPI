@@ -9,12 +9,14 @@
 #include "Window.hpp"
 #include "../OpenGL/GLWindow.hpp"
 
-Window::Window(std::string title, int width, int height, bool visible, bool GL) : win(0), winID(0), renderer(0), title(title), width(width), height(height), visible(visible), closed(false){
+Window::Window(std::string const &title, int width, int height, bool visible, bool GL) : Event(), win(nullptr), winID(0), renderer(
+        nullptr),
+                                                                                  title(title), width(width),
+                                                                                  height(height), visible(visible),
+                                                                                  closed(false){
     if(!GL)
         create();
 }
-//Window::Window(bool GL, std::string title, int width, int height, bool visible) : win(0), winID(0), renderer(0), title(title), width(width), height(height), visible(visible), closed(false){
-//}
 
 Window::~Window(){
     windows.erase(winID);
@@ -34,7 +36,7 @@ void Window::create(){
     update();
 }
 
-void Window::setTitle(std::string title){
+void Window::setTitle(const std::string &title){
     this->title = title;
     SDL_SetWindowTitle(win, title.c_str());
 }
@@ -106,7 +108,7 @@ void Window::clear(){
     SDL_RenderClear(renderer);
 }
 
-void Window::setColour(Colour c){
+void Window::setColour(const Colour &c){
     SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, c.a);
 }
 

@@ -12,16 +12,14 @@ Thread::Thread(): isstop(true), thread(nullptr), autoDelete(false)
 {
     
 }
-Thread::~Thread()
-{
-    
-}
-bool Thread::start(std::string name)
+Thread::~Thread() = default;
+
+bool Thread::start(const std::string &name)
 {
     if(isstop)
     {
         thread = new std::thread(Thread::ThreadInit, this);
-        if(thread != 0)
+        if(thread != nullptr)
         {
             isstop = false;
             return true;
@@ -54,11 +52,11 @@ bool Thread::threadRunning()
     return isstop;
 }
 
-void Thread::lockMutex(std::string name)
+void Thread::lockMutex(const std::string &name)
 {
     mutexs[name].lock();
 }
-bool Thread::unlockMutex(std::string name)
+bool Thread::unlockMutex(const std::string &name)
 {
     auto mutex = mutexs.find(name);
     

@@ -26,10 +26,10 @@ public:
      The matrix can be the viewProjection matrix (projection*view)
      or the inverse of a model matrix which will generate a cube frustum around the pos in the model matrix
      */
-    Frustum(glm::mat4 matrix);
+    explicit Frustum(glm::mat4 matrix);
     ~Frustum();
     
-    bool collide(glm::vec3 pos, float radius);
+    bool collide(const glm::vec3 &pos, float radius);
 };
 
 #endif /* Frustum_hpp */

@@ -11,7 +11,7 @@
 int Texture::count = 0;
 std::unordered_map<std::string, texSave> Texture::savedTextures;
 
-Texture::Texture(std::string imageFile, GLuint minFilter, GLuint magFilter): id(0), textureIndex(0), imageFile(imageFile), width(0), height(0), format(0), internalFormat(0), minFilter(minFilter), magFilter(magFilter), emptyTexture(false){
+Texture::Texture(const std::string &imageFile, GLuint minFilter, GLuint magFilter): id(0), textureIndex(0), imageFile(imageFile), width(0), height(0), format(0), internalFormat(0), minFilter(minFilter), magFilter(magFilter), emptyTexture(false){
     count++;
 }
 Texture::Texture(int width, int height, GLenum format, GLenum internalFormat, GLuint minFilter, GLuint magFilter): id(0), textureIndex(0), imageFile(""), width(width), height(height), format(format), internalFormat(internalFormat), minFilter(minFilter), magFilter(magFilter), emptyTexture(true){
@@ -55,7 +55,7 @@ Texture::~Texture(){
 }
 
 SDL_Surface* Texture::glGetTexture() const{
-    SDL_Surface *image = 0;
+    SDL_Surface *image = nullptr;
     bool found = true;
     Uint32 r = 0, g = 0x0000FF00, b = 0,  a = 0xFF000000;
     int BitsPerPixel = 0;
@@ -97,10 +97,10 @@ void Texture::glLoadTexture(SDL_Surface* texture){
     glGenTextures(1, &id);
     glBindTexture(GL_TEXTURE_2D, id);
     
-    if(texture != 0)
+    if(texture != nullptr)
         glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, texture->w, texture->h, 0, format, GL_UNSIGNED_BYTE, texture->pixels);
     else
-        glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, 0);
+        glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, nullptr);
     
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilter);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magFilter);
@@ -109,13 +109,13 @@ void Texture::glLoadTexture(SDL_Surface* texture){
 }
 bool Texture::load(){
     if(emptyTexture){
-        glLoadTexture(0);
+        glLoadTexture(nullptr);
     }else{
         if(savedTextures.find(imageFile) == savedTextures.end()){
             SDL_Surface *reversedImage;
             SDL_Surface *imageSDL = IMG_Load(imageFile.c_str());
             
-            if(imageSDL == 0){
+            if(imageSDL == nullptr){
                 std::cout << "Error : " << SDL_GetError() << std::endl;
                 return false;
             }
@@ -164,9 +164,9 @@ bool Texture::load(){
 void Texture::setImageFile(const std::string &imageFile){
     this->imageFile =  imageFile;
 }
-void Texture::savePNG(std::string file){
+void Texture::savePNG(const std::string &file){
     SDL_Surface *texture = glGetTexture();
-    if(texture != 0){
+    if(texture != nullptr){
         IMG_SavePNG(verticalReverse(texture),(file+".png").c_str());
     }
 }
@@ -177,7 +177,7 @@ SDL_Surface* Texture::verticalReverse(SDL_Surface *sourceImage) const{
     
     
     // Tableau intermÈdiaires permettant de manipuler les pixels
-    
+
     unsigned char* pixelsSources = (unsigned char*) sourceImage->pixels;
     unsigned char* pixelsInverses = (unsigned char*) reversedImage->pixels;
     
@@ -221,7 +221,7 @@ SDL_Surface* Texture::horizontalReverse(SDL_Surface *sourceImage) const{
 }
 void Texture::verticalReverse(){
     SDL_Surface *texture = glGetTexture();
-    if(texture != 0){
+    if(texture != nullptr){
         SDL_Surface *reversedImage = verticalReverse(texture);
         glLoadTexture(reversedImage);
         SDL_FreeSurface(texture);
@@ -230,7 +230,7 @@ void Texture::verticalReverse(){
 }
 void Texture::horizontalReverse(){
     SDL_Surface *texture = glGetTexture();
-    if(texture != 0){
+    if(texture != nullptr){
         SDL_Surface *reversedImage = horizontalReverse(texture);
         glLoadTexture(reversedImage);
         SDL_FreeSurface(texture);

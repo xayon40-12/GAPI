@@ -15,10 +15,10 @@
 #define debugPath std::string("")
 #endif
 
-#define shadersPath debugPath+"resources/shaders/"
-#define imagesPath debugPath+"resources/images/"
+#define shadersPath (debugPath+"resources/shaders/")
+#define imagesPath (debugPath+"resources/images/")
 
-Fenetre::Fenetre(std::string title, int width, int height, int major, int minor):
+Fenetre::Fenetre(const std::string &title, int width, int height, int major, int minor):
     GLWindow(title, width, height, true, major, minor),
     frameBuffer(width, height, 2),
 
@@ -46,20 +46,18 @@ obj(Object::createCube(glm::vec3(0, 0, 0), glm::vec3(0.4, 0, 0), glm::vec3(0, 0.
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_CULL_FACE);
 }
-Fenetre::~Fenetre(){
-    
-}
+Fenetre::~Fenetre() = default;
 
 void Fenetre::paintComponent(){
     glm::mat4 V = camera.lookAt(), VP = perspective*V;
     Frustum frustum(VP);
     
     
-    setColour(Colour::white);
+    setColour(Colour::white());
     clear();
     
     frameBuffer.use();
-    setColour(Colour::white);
+    setColour(Colour::white());
     clear();
     
     obj.use();

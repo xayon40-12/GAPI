@@ -23,14 +23,6 @@ std::unordered_map<Sint32, Uint8> Event::toUpdatekeys;
 
 int Event::m_x, Event::m_y, Event::m_xrel, Event::m_yrel, Event::m_xOnScreen, Event::m_yOnScreen, Event::m_xWheel = 0, Event::m_yWheel = 0;
 
-Event::Event(){
-    initWindow();
-}
-
-Event::~Event(){
-    endWindow();
-}
-
 void Event::initWindow(){
     SDL_Init(SDL_INIT_VIDEO);
 }
@@ -78,3 +70,9 @@ void Event::update(){
     }
     SDL_GetGlobalMouseState(&m_xOnScreen, &m_yOnScreen);
 }
+
+Event::Event(): operation(EXIT_ON_CLOSE) {
+
+}
+
+Event::~Event() = default;

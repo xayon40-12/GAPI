@@ -30,8 +30,8 @@ private:
     
     int option;
 public:
-    Fenetre(std::string title, int width, int height, int major = 2, int minor = 1);
-    ~Fenetre();
+    Fenetre(const std::string &title, int width, int height, int major = 2, int minor = 1);
+    ~Fenetre() override;
     
     void paintComponent();
     

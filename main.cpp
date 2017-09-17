@@ -9,7 +9,7 @@ void ThreadTest();
 int main(int argc, char* argv[])
 {
     //ThreadTest();
-    //fenTest();
+    //multiFenetreTest();
     
     fenetre3DTest();
     
@@ -23,7 +23,7 @@ void multiFenetreTest(){
     tab.push_back(std::shared_ptr<Fen2>(new Fen2("test", 200, 200)));
     tab[0]->setPosition(100, 100);
     auto toRemove = tab.end();
-    while(tab.size()>0){
+    while(!tab.empty()){
         for(auto fen = tab.begin();fen != tab.end();fen++){
             if(fen->get()->isClosed())
                 toRemove = fen;

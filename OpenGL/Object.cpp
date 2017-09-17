@@ -10,14 +10,17 @@
 
 std::map<std::string, Shape> Object::shapes;
 
-Object::Object(std::string sourceVertex, std::string sourceFragment): Frame(), Shader(sourceVertex, sourceFragment), texture(0), normalMap(0), highMap(0){
+Object::Object(const std::string &sourceVertex, const std::string &sourceFragment): Frame(), Shader(sourceVertex, sourceFragment), texture(
+        nullptr), normalMap(nullptr), highMap(nullptr){
 }
-Object::Object(std::string sourceVertex, std::string sourceGeometry, std::string sourceFragment): Frame(), Shader(sourceVertex, sourceGeometry, sourceFragment), texture(0), normalMap(0), highMap(0){
+Object::Object(const std::string &sourceVertex, const std::string &sourceGeometry, const std::string &sourceFragment): Frame(), Shader(sourceVertex, sourceGeometry, sourceFragment), texture(
+        nullptr), normalMap(nullptr), highMap(nullptr){
 }
-Object::Object(Object const &toCopy): Frame(toCopy), Shader(toCopy), texture(0), normalMap(0), highMap(0), type(toCopy.type), anchor(toCopy.anchor), baseAnchor(toCopy.baseAnchor){
-    delete texture; texture = 0;
-    delete normalMap; normalMap = 0;
-    delete highMap; highMap = 0;
+Object::Object(Object const &toCopy): Frame(toCopy), Shader(toCopy), texture(nullptr), normalMap(nullptr), highMap(
+        nullptr), type(toCopy.type), anchor(toCopy.anchor), baseAnchor(toCopy.baseAnchor){
+    delete texture; texture = nullptr;
+    delete normalMap; normalMap = nullptr;
+    delete highMap; highMap = nullptr;
     if(toCopy.texture) texture = new Texture(*toCopy.texture);
     if(toCopy.normalMap) normalMap = new Texture(*toCopy.normalMap);
     if(toCopy.highMap) highMap = new Texture(*toCopy.highMap);
@@ -25,9 +28,9 @@ Object::Object(Object const &toCopy): Frame(toCopy), Shader(toCopy), texture(0),
 Object& Object::operator=(Object const &toCopy){
     Frame::operator=(toCopy);
     Shader::operator=(toCopy);
-    delete texture; texture = 0;
-    delete normalMap; normalMap = 0;
-    delete highMap; highMap = 0;
+    delete texture; texture = nullptr;
+    delete normalMap; normalMap = nullptr;
+    delete highMap; highMap = nullptr;
     if(toCopy.texture) texture = new Texture(*toCopy.texture);
     if(toCopy.normalMap) normalMap = new Texture(*toCopy.normalMap);
     if(toCopy.highMap) highMap = new Texture(*toCopy.highMap);
@@ -90,7 +93,7 @@ bool Object::reload(){
     }
 }
 
-void Object::show(glm::mat4 viewProjection, bool uniformModel, bool uniformBase){
+void Object::show(const glm::mat4 &viewProjection, bool uniformModel, bool uniformBase){
     glm::mat4 model = toMatrix()*anchor, MVP = viewProjection*model;
     //use frustum culling
     use();
@@ -128,7 +131,8 @@ void Object::show(glm::mat4 viewProjection, bool uniformModel, bool uniformBase)
         -square: "square(r,g,b)rx:ry"
  */
 #include <sstream>
-Object_t Object::generateSquare(glm::vec3 position, glm::vec3 X, glm::vec3 Y, glm::vec3 colour, glm::vec2 textureRepetition){
+Object_t Object::generateSquare(const glm::vec3 &position, const glm::vec3 &X, const glm::vec3 &Y,
+                                const glm::vec3 &colour, const glm::vec2 &textureRepetition){
     Object_t obj;
     
     glm::vec3 v1(position-X+Y), v2(position-X-Y), v3(position+X-Y), v4(position+X+Y);
@@ -170,7 +174,11 @@ Object_t Object::generateSquare(glm::vec3 position, glm::vec3 X, glm::vec3 Y, gl
     
     return obj;
 }
-Object Object::createSquare(glm::vec3 initialPosition, glm::vec3 X, glm::vec3 Y, std::string sourceVertex, std::string sourceGeometry, std::string sourceFragment, glm::vec3 colour, std::string texture, glm::vec2 textureRepetition, std::string normalMap, std::string highMap){
+Object Object::createSquare(const glm::vec3 &initialPosition, const glm::vec3 &X, const glm::vec3 &Y,
+                            const std::string &sourceVertex, const std::string &sourceGeometry,
+                            const std::string &sourceFragment, const glm::vec3 &colour, const std::string &texture,
+                            const glm::vec2 &textureRepetition, const std::string &normalMap,
+                            const std::string &highMap){
     Object obj(sourceVertex, sourceGeometry, sourceFragment);
     
     std::ostringstream oss;
@@ -186,15 +194,15 @@ Object Object::createSquare(glm::vec3 initialPosition, glm::vec3 X, glm::vec3 Y,
     obj.anchor = glm::mat4(glm::vec4(X, 0), glm::vec4(Y, 0), glm::vec4(z, 0), glm::vec4(initialPosition, 1));
     obj.baseAnchor = glm::mat3(x, y, z);
     
-    if(texture != ""){
+    if(!texture.empty()){
         obj.texture = new Texture(texture);
         obj.texture->load();
     }
-    if(normalMap != ""){
+    if(!normalMap.empty()){
         obj.normalMap = new Texture(normalMap);
         obj.normalMap->load();
     }
-    if(highMap != ""){
+    if(!highMap.empty()){
         obj.highMap = new Texture(highMap);
         obj.highMap->load();
     }
@@ -214,7 +222,8 @@ Object Object::createSquare(glm::vec3 initialPosition, glm::vec3 X, glm::vec3 Y,
     return obj;
 }
 
-Object_t Object::generateCube(glm::vec3 position, glm::vec3 X, glm::vec3 Y, glm::vec3 Z, glm::vec3 colour){
+Object_t Object::generateCube(const glm::vec3 &position, const glm::vec3 &X, const glm::vec3 &Y, const glm::vec3 &Z,
+                              const glm::vec3 &colour){
     Object_t obj;
     
     std::vector<float> vertices, colours, normals, tangents, bitangents;
@@ -274,7 +283,10 @@ Object_t Object::generateCube(glm::vec3 position, glm::vec3 X, glm::vec3 Y, glm:
     
     return obj;
 }
-Object Object::createCube(glm::vec3 initialPosition, glm::vec3 X, glm::vec3 Y, glm::vec3 Z, std::string sourceVertex, std::string sourceGeometry, std::string sourceFragment, glm::vec3 colour, std::string texture, std::string normalMap, std::string highMap){
+Object Object::createCube(const glm::vec3 &initialPosition, const glm::vec3 &X, const glm::vec3 &Y, const glm::vec3 &Z,
+                          const std::string &sourceVertex, const std::string &sourceGeometry,
+                          const std::string &sourceFragment, const glm::vec3 &colour, const std::string &texture,
+                          const std::string &normalMap, const std::string &highMap){
     Object obj(sourceVertex, sourceGeometry, sourceFragment);
     
     std::ostringstream oss;
@@ -288,15 +300,15 @@ Object Object::createCube(glm::vec3 initialPosition, glm::vec3 X, glm::vec3 Y, g
     obj.anchor = glm::mat4(glm::vec4(X, 0), glm::vec4(Y, 0), glm::vec4(Z, 0), glm::vec4(initialPosition, 1));
     obj.baseAnchor = glm::mat3(x, y, z);
     
-    if(texture != ""){
+    if(!texture.empty()){
         obj.texture = new Texture(texture);
         obj.texture->load();
     }
-    if(normalMap != ""){
+    if(!normalMap.empty()){
         obj.normalMap = new Texture(normalMap);
         obj.normalMap->load();
     }
-    if(highMap != ""){
+    if(!highMap.empty()){
         obj.highMap = new Texture(highMap);
         obj.highMap->load();
     }
@@ -318,7 +330,8 @@ Object Object::createCube(glm::vec3 initialPosition, glm::vec3 X, glm::vec3 Y, g
 }
 
 
-Object_t Object::generateSphere(glm::vec3 position, float radius, unsigned int tesselation, glm::vec3 colour){
+Object_t Object::generateSphere(const glm::vec3 &position, float radius, unsigned int tesselation,
+                                const glm::vec3 &colour){
     if(tesselation<2) tesselation = 2;
     
     Object_t obj;
@@ -382,7 +395,11 @@ Object_t Object::generateSphere(glm::vec3 position, float radius, unsigned int t
     
     return obj;
 }
-Object Object::createSphere(glm::vec3 initialPosition, glm::vec3 X, glm::vec3 Y, glm::vec3 Z, unsigned int tesselation, std::string sourceVertex, std::string sourceGeometry, std::string sourceFragment, glm::vec3 colour, std::string texture, std::string normalMap, std::string highMap){
+Object Object::createSphere(const glm::vec3 &initialPosition, const glm::vec3 &X, const glm::vec3 &Y,
+                            const glm::vec3 &Z, unsigned int tesselation, const std::string &sourceVertex,
+                            const std::string &sourceGeometry, const std::string &sourceFragment,
+                            const glm::vec3 &colour, const std::string &texture, const std::string &normalMap,
+                            const std::string &highMap){
     Object obj(sourceVertex, sourceGeometry, sourceFragment);
     
     std::ostringstream oss;
@@ -396,15 +413,15 @@ Object Object::createSphere(glm::vec3 initialPosition, glm::vec3 X, glm::vec3 Y,
     obj.anchor = glm::mat4(glm::vec4(X, 0), glm::vec4(Y, 0), glm::vec4(Z, 0), glm::vec4(initialPosition, 1));
     obj.baseAnchor = glm::mat3(x, y, z);
     
-    if(texture != ""){
+    if(!texture.empty()){
         obj.texture = new Texture(texture);
         obj.texture->load();
     }
-    if(normalMap != ""){
+    if(!normalMap.empty()){
         obj.normalMap = new Texture(normalMap);
         obj.normalMap->load();
     }
-    if(highMap != ""){
+    if(!highMap.empty()){
         obj.highMap = new Texture(highMap);
         obj.highMap->load();
     }

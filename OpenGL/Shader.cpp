@@ -18,10 +18,10 @@ std::map<std::string, GLuint> Shader::vertexIDs;
 std::map<std::string, GLuint> Shader::geometryIDs;
 std::map<std::string, GLuint> Shader::fragmentIDs;
 
-Shader::Shader(std::string sourceVertex, std::string sourceGeometry, std::string sourceFragment): vertexID(0), geometryID(0), fragmentID(0), programID(0), sourceVertex(sourceVertex), sourceGeometry(sourceGeometry), sourceFragment(sourceFragment), vboID(0), iboID(0), vaoID(0), useIndicies(false), nbElements(0){
+Shader::Shader(const std::string &sourceVertex, const std::string &sourceGeometry, const std::string &sourceFragment): vertexID(0), geometryID(0), fragmentID(0), programID(0), sourceVertex(sourceVertex), sourceGeometry(sourceGeometry), sourceFragment(sourceFragment), vboID(0), iboID(0), vaoID(0), useIndicies(false), nbElements(0){
     count++;
 }
-Shader::Shader(std::string sourceVertex, std::string sourceFragment): vertexID(0), geometryID(0), fragmentID(0), programID(0), sourceVertex(sourceVertex), sourceGeometry(""), sourceFragment(sourceFragment), vboID(0), iboID(0), vaoID(0), useIndicies(false), nbElements(0){
+Shader::Shader(const std::string &sourceVertex, const std::string &sourceFragment): vertexID(0), geometryID(0), fragmentID(0), programID(0), sourceVertex(sourceVertex), sourceGeometry(""), sourceFragment(sourceFragment), vboID(0), iboID(0), vaoID(0), useIndicies(false), nbElements(0){
     count++;
 }
 Shader::Shader(Shader const &toCopy): offset(toCopy.offset), vertexID(toCopy.vertexID), geometryID(toCopy.geometryID), fragmentID(toCopy.fragmentID), programID(0), sourceVertex(toCopy.sourceVertex), sourceGeometry(toCopy.sourceGeometry), sourceFragment(toCopy.sourceFragment), vboID(0), iboID(0), vaoID(0), useIndicies(false), nbElements(0), glslData(toCopy.glslData), indicies(toCopy.indicies){
@@ -69,7 +69,7 @@ Shader::~Shader(){
 }
 
 bool Shader::create(){
-    if(sourceVertex == "" || sourceFragment == "") return false;
+    if(sourceVertex.empty() || sourceFragment.empty()) return false;
     
     std::map<std::string, GLuint>::iterator it;
     if((it = vertexIDs.find(sourceVertex)) == vertexIDs.end()){
@@ -80,7 +80,7 @@ bool Shader::create(){
     }else{
         vertexID = it->second;
     }
-    if(sourceGeometry != ""){
+    if(!sourceGeometry.empty()){
         if((it = geometryIDs.find(sourceGeometry)) == geometryIDs.end()){
             if(!compileShader(geometryID, GL_GEOMETRY_SHADER, sourceGeometry))
                 return false;
@@ -106,7 +106,7 @@ bool Shader::linkProgram(){
         glDeleteProgram(programID);
     programID = glCreateProgram();
     glAttachShader(programID, vertexID);
-    if(sourceGeometry != "") glAttachShader(programID, geometryID);
+    if(!sourceGeometry.empty()) glAttachShader(programID, geometryID);
     glAttachShader(programID, fragmentID);
     for(GLuint i = 0;i<glslData.size();i++)
         glBindAttribLocation(programID, i, glslData[i].name.c_str());
@@ -130,9 +130,9 @@ bool Shader::reload(){
     auto tmp = glslData;
     glslData.clear();
     for(auto &d : tmp)
-        if(d.dataArray.size() != 0)
+        if(!d.dataArray.empty())
             glslData.push_back(d);
-    if(glslData.size() == 0) return false;
+    if(glslData.empty()) return false;
     
     if(linkProgram()){
         if(glIsBuffer(vboID) == GL_TRUE)
@@ -148,13 +148,13 @@ bool Shader::reload(){
             cum[i+1] = cum[i] + (int)glslData[i].dataArray.size()*sizeof(float);
         }
         
-        glBufferData(GL_ARRAY_BUFFER, cum[glslData.size()], 0, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, cum[glslData.size()], nullptr, GL_STATIC_DRAW);
         for(int i = 0;i<glslData.size();i++)
             glBufferSubData(GL_ARRAY_BUFFER, cum[i], (GLsizeiptr) (glslData[i].dataArray.size() * sizeof(float)), glslData[i].dataArray.data());
         
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         
-        if(indicies.size() != 0){
+        if(!indicies.empty()){
             if(glIsBuffer(iboID) == GL_TRUE)
                 glDeleteBuffers(1, &iboID);
             glGenBuffers(1, &iboID);
@@ -175,13 +175,13 @@ bool Shader::reload(){
             glEnableVertexAttribArray(i);
         }
         
-        if(indicies.size() != 0) glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboID);
+        if(!indicies.empty()) glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboID);
         
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         
         glBindVertexArray(0);
         
-        if(indicies.size() == 0){
+        if(indicies.empty()){
             useIndicies = false;
             nbElements = (unsigned int)glslData[0].dataArray.size()/glslData[0].dataLength;
         }else{
@@ -211,7 +211,7 @@ bool Shader::compileShader(GLuint &shader, GLenum type, std::string const &sourc
         codeSource+=ligne + '\n';
     fichier.close();
     const GLchar* chaineCodeSource = codeSource.c_str();
-    glShaderSource(shader, 1, &chaineCodeSource, 0);
+    glShaderSource(shader, 1, &chaineCodeSource, nullptr);
     glCompileShader(shader);
     GLint erreurCompilation(0);
     glGetShaderiv(shader, GL_COMPILE_STATUS, &erreurCompilation);
@@ -242,15 +242,15 @@ void Shader::draw(GLenum mode, GLint first, GLsizei count){
 }
 void Shader::draw(GLenum mode){
     if(useIndicies)
-        glDrawElements(mode, nbElements, GL_UNSIGNED_INT, 0);
+        glDrawElements(mode, nbElements, GL_UNSIGNED_INT, nullptr);
     else
         glDrawArrays(mode, 0, nbElements);
 }
-void Shader::drawElements(GLenum mode, std::vector<GLuint> indicies){
+void Shader::drawElements(GLenum mode, const std::vector<GLuint> &indicies){
     glDrawElements(mode, (int)indicies.size(), GL_UNSIGNED_INT, indicies.data());
 }
 
-void Shader::loadData(std::string glslName, std::vector<float> const &data, int dataLength){
+void Shader::loadData(const std::string &glslName, std::vector<float> const &data, int dataLength){
     int index = -1;
     for(int i = 0;i<glslData.size();i++)
         if(glslData[i].name == glslName){
@@ -266,7 +266,7 @@ void Shader::loadData(std::string glslName, std::vector<float> const &data, int 
     }else
         glslData.push_back({glslName, data, dataLength, data.size()});
 }
-bool Shader::updateData(std::string glslName, std::vector<float> const &data){
+bool Shader::updateData(const std::string &glslName, std::vector<float> const &data){
     bool updated = false;
     for(auto &d : glslData)
         if(d.name == glslName)
@@ -278,7 +278,7 @@ bool Shader::updateData(std::string glslName, std::vector<float> const &data){
     
     return updated;
 }
-void Shader::loadIndecies(std::vector<GLuint> indicies){
+void Shader::loadIndecies(const std::vector<GLuint> &indicies){
     this->indicies = indicies;
 }
 
@@ -288,43 +288,43 @@ void Shader::clearBuffers(){
     indicies.clear();
 }
 
-void Shader::uniformData(std::string name, int data){
+void Shader::uniformData(const std::string &name, const int &data){
     glUniform1i(uniformLocation(name), data);
 }
-void Shader::uniformData(std::string name, float data){
+void Shader::uniformData(const std::string &name, const float &data){
     glUniform1f(uniformLocation(name), data);
 }
-void Shader::uniformData(std::string name, double data){
+void Shader::uniformData(const std::string &name, const double &data){
     glUniform1d(uniformLocation(name), data);
 }
-void Shader::uniformData(std::string name, std::vector<int> data, int elementLength){
+void Shader::uniformData(const std::string &name, const std::vector<int> &data, int elementLength){
     if(elementLength == 1) glUniform1iv(uniformLocation(name), (int)data.size(), data.data());
     if(elementLength == 2) glUniform2iv(uniformLocation(name), (int)data.size()/elementLength, data.data());
     if(elementLength == 3) glUniform3iv(uniformLocation(name), (int)data.size()/elementLength, data.data());
     if(elementLength == 4) glUniform4iv(uniformLocation(name), (int)data.size()/elementLength, data.data());
 }
-void Shader::uniformData(std::string name, std::vector<float> data, int elementLength){
+void Shader::uniformData(const std::string &name, const std::vector<float> &data, int elementLength){
     if(elementLength == 1) glUniform1fv(uniformLocation(name), (int)data.size(), data.data());
     if(elementLength == 2) glUniform2fv(uniformLocation(name), (int)data.size()/elementLength, data.data());
     if(elementLength == 3) glUniform3fv(uniformLocation(name), (int)data.size()/elementLength, data.data());
     if(elementLength == 4) glUniform4fv(uniformLocation(name), (int)data.size()/elementLength, data.data());
 }
-void Shader::uniformData(std::string name, std::vector<double> data, int elementLength){
+void Shader::uniformData(const std::string &name, const std::vector<double> &data, int elementLength){
     if(elementLength == 1) glUniform1dv(uniformLocation(name), (int)data.size(), data.data());
     if(elementLength == 2) glUniform2dv(uniformLocation(name), (int)data.size()/elementLength, data.data());
     if(elementLength == 3) glUniform3dv(uniformLocation(name), (int)data.size()/elementLength, data.data());
     if(elementLength == 4) glUniform4dv(uniformLocation(name), (int)data.size()/elementLength, data.data());
 }
-void Shader::uniformData(std::string name, glm::vec2 data){
+void Shader::uniformData(const std::string &name, const glm::vec2 &data){
     glUniform2f(uniformLocation(name), data.x, data.y);
 }
-void Shader::uniformData(std::string name, glm::vec3 data){
+void Shader::uniformData(const std::string &name, const glm::vec3 &data){
     glUniform3f(uniformLocation(name), data.x, data.y, data.z);
 }
-void Shader::uniformData(std::string name, glm::vec4 data){
+void Shader::uniformData(const std::string &name, const glm::vec4 &data){
     glUniform4f(uniformLocation(name), data.x, data.y, data.z, data.w);
 }
-void Shader::uniformData(std::string name, std::vector<glm::vec2> data){
+void Shader::uniformData(const std::string &name, const std::vector<glm::vec2> &data){
     std::vector<float> tab;
     for(glm::vec2 v : data){
         tab.push_back(v.x);
@@ -332,7 +332,7 @@ void Shader::uniformData(std::string name, std::vector<glm::vec2> data){
     }
     glUniform2fv(uniformLocation(name), (int)tab.size(), tab.data());
 }
-void Shader::uniformData(std::string name, std::vector<glm::vec3> data){
+void Shader::uniformData(const std::string &name, const std::vector<glm::vec3> &data){
     std::vector<float> tab;
     for(glm::vec3 v : data){
         tab.push_back(v.x);
@@ -341,7 +341,7 @@ void Shader::uniformData(std::string name, std::vector<glm::vec3> data){
     }
     glUniform2fv(uniformLocation(name), (int)tab.size(), tab.data());
 }
-void Shader::uniformData(std::string name, std::vector<glm::vec4> data){
+void Shader::uniformData(const std::string &name, const std::vector<glm::vec4> &data){
     std::vector<float> tab;
     for(glm::vec4 v : data){
         tab.push_back(v.x);
@@ -352,20 +352,20 @@ void Shader::uniformData(std::string name, std::vector<glm::vec4> data){
     glUniform2fv(uniformLocation(name), (int)tab.size(), tab.data());
 }
 
-void Shader::uniformMatrix(std::string name, glm::mat4 mat){
+void Shader::uniformMatrix(const std::string &name, const glm::mat4 &mat){
     glUniformMatrix4fv(glGetUniformLocation(programID, name.c_str()), 1, GL_FALSE, glm::value_ptr(mat));
 }
-void Shader::uniformMatrix(std::string name, glm::mat3 mat){
+void Shader::uniformMatrix(const std::string &name, const glm::mat3 &mat){
     glUniformMatrix3fv(glGetUniformLocation(programID, name.c_str()), 1, GL_FALSE, glm::value_ptr(mat));
 }
-void Shader::uniformMatrix(std::string name, glm::mat2 mat){
+void Shader::uniformMatrix(const std::string &name, const glm::mat2 &mat){
     glUniformMatrix2fv(glGetUniformLocation(programID, name.c_str()), 1, GL_FALSE, glm::value_ptr(mat));
 }
-void Shader::uniformMVP(glm::mat4 MVP){
+void Shader::uniformMVP(const glm::mat4 &MVP){
     glUniformMatrix4fv(glGetUniformLocation(programID, "MVP"), 1, GL_FALSE, glm::value_ptr(MVP));
 }
 
-GLint Shader::uniformLocation(std::string name){
+GLint Shader::uniformLocation(const std::string &name){
     return glGetUniformLocation(programID, name.c_str());
 }
 
@@ -381,13 +381,13 @@ GLuint Shader::getVBO(){
 }
 
 
-void Shader::updateVBO(std::string glslName, std::vector<float> const &data)
+void Shader::updateVBO(const std::string &glslName, std::vector<float> const &data)
 {
     glBindBuffer(GL_ARRAY_BUFFER, vboID);
     
     void *adresseVBO = glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
     
-    if(adresseVBO == NULL)
+    if(adresseVBO == nullptr)
     {
         std::cout << "ERREUR au niveau de la recuperation du VBO" << std::endl;
         glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -397,7 +397,7 @@ void Shader::updateVBO(std::string glslName, std::vector<float> const &data)
     memcpy((char*)adresseVBO+offset[glslName], data.data(), data.size()*sizeof(float));
     
     glUnmapBuffer(GL_ARRAY_BUFFER);
-    adresseVBO = 0;
+    adresseVBO = nullptr;
     
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }

@@ -17,8 +17,8 @@ class Fen2 : public Window{
 private:
     
 public:
-    Fen2(std::string title, int width, int height);
-    ~Fen2();
+    Fen2(const std::string &title, int width, int height);
+    ~Fen2() override;
     
     void paintComponent();
     

@@ -21,18 +21,18 @@ struct Colour{
     Colour(u_char r, u_char g, u_char b, u_char a);
     ~Colour();
     
-    static Colour black;
-    static Colour white;
-    static Colour gray;
-    static Colour red;
-    static Colour green;
-    static Colour blue;
-    static Colour orange;
-    static Colour purple;
-    static Colour cyan;
-    static Colour yellow;
-    static Colour magenta;
-    static Colour brown;
+    static Colour black();
+    static Colour white();
+    static Colour gray();
+    static Colour red();
+    static Colour green();
+    static Colour blue();
+    static Colour orange();
+    static Colour purple();
+    static Colour cyan();
+    static Colour yellow();
+    static Colour magenta();
+    static Colour brown();
 };
 
 #endif /* Colour_hpp */

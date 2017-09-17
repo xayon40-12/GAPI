@@ -69,17 +69,17 @@ protected:
     glm::mat4 anchor;
     glm::mat3 baseAnchor;
     
-    Object(std::string sourceVertex, std::string sourceFragment);
-    Object(std::string sourceVertex, std::string sourceGeometry, std::string sourceFragment);
+    Object(const std::string &sourceVertex, const std::string &sourceFragment);
+    Object(const std::string &sourceVertex, const std::string &sourceGeometry, const std::string &sourceFragment);
 public:
     //WARNING: If you copy an object you need to call reload() for the copied object
     Object(Object const &toCopy);
     Object& operator=(Object const &toCopy);
-    ~Object();
+    ~Object() override;
     
-    bool reload();
+    bool reload() override;
     
-    void show(glm::mat4 viewProjection = glm::mat4(1), bool uniformModel = false, bool uniformBase = false);
+    void show(const glm::mat4 &viewProjection = glm::mat4(1), bool uniformModel = false, bool uniformBase = false);
     
     //************************************************* GENERATE/CREATE *************************************************
     //GENERATE means: generate the buffers (vertices, texCoord, normals...) and store it in an Object_t type
@@ -88,8 +88,13 @@ public:
     //the initialPostion and the X, Y, Z axis represent the initial position, orientation ans scale.
     //So if the initialPosition is (1, 0, 0) and after you use rotate(YAW, PI/2) the position will be (0, 0, -1)
     
-    static Object_t generateSquare(glm::vec3 position, glm::vec3 X, glm::vec3 Y, glm::vec3 colour = {1, 1, 1}, glm::vec2 textureRepetition = {1, 1});
-    static Object createSquare(glm::vec3 initialPosition, glm::vec3 X, glm::vec3 Y, std::string sourceVertex, std::string sourceGeometry, std::string sourceFragment, glm::vec3 colour = {1, 1, 1}, std::string texture = "", glm::vec2 textureRepetition = {1, 1}, std::string normalMap = "", std::string highMap = "");
+    static Object_t generateSquare(const glm::vec3 &position, const glm::vec3 &X, const glm::vec3 &Y,
+                                   const glm::vec3 &colour = {1, 1, 1}, const glm::vec2 &textureRepetition = {1, 1});
+    static Object createSquare(const glm::vec3 &initialPosition, const glm::vec3 &X, const glm::vec3 &Y,
+                               const std::string &sourceVertex, const std::string &sourceGeometry,
+                               const std::string &sourceFragment, const glm::vec3 &colour = {1, 1, 1},
+                               const std::string &texture = "", const glm::vec2 &textureRepetition = {1, 1},
+                               const std::string &normalMap = "", const std::string &highMap = "");
     
     /*For cube use one texture whith all faces on it
      ┌───┬───┬───┐
@@ -99,11 +104,21 @@ public:
      └───┴───┴───┘
      The texture repetition is per face
      */
-    static Object_t generateCube(glm::vec3 position, glm::vec3 X, glm::vec3 Y, glm::vec3 Z, glm::vec3 colour = {1, 1, 1});
-    static Object createCube(glm::vec3 initialPosition, glm::vec3 X, glm::vec3 Y, glm::vec3 Z, std::string sourceVertex, std::string sourceGeometry, std::string sourceFragment, glm::vec3 colour = {1, 1, 1}, std::string texture = "", std::string normalMap = "", std::string highMap = "");
+    static Object_t generateCube(const glm::vec3 &position, const glm::vec3 &X, const glm::vec3 &Y, const glm::vec3 &Z,
+                                 const glm::vec3 &colour = {1, 1, 1});
+    static Object createCube(const glm::vec3 &initialPosition, const glm::vec3 &X, const glm::vec3 &Y,
+                             const glm::vec3 &Z, const std::string &sourceVertex, const std::string &sourceGeometry,
+                             const std::string &sourceFragment, const glm::vec3 &colour = {1, 1, 1},
+                             const std::string &texture = "", const std::string &normalMap = "",
+                             const std::string &highMap = "");
     
-    static Object_t generateSphere(glm::vec3 position, float radius, unsigned int tesselation, glm::vec3 colour = {1, 1, 1});
-    static Object createSphere(glm::vec3 initialPosition, glm::vec3 X, glm::vec3 Y, glm::vec3 Z, unsigned int tesselation, std::string sourceVertex, std::string sourceGeometry, std::string sourceFragment, glm::vec3 colour = {1, 1, 1}, std::string texture = "", std::string normalMap = "", std::string highMap = "");
+    static Object_t generateSphere(const glm::vec3 &position, float radius, unsigned int tesselation,
+                                   const glm::vec3 &colour = {1, 1, 1});
+    static Object createSphere(const glm::vec3 &initialPosition, const glm::vec3 &X, const glm::vec3 &Y,
+                               const glm::vec3 &Z, unsigned int tesselation, const std::string &sourceVertex,
+                               const std::string &sourceGeometry, const std::string &sourceFragment,
+                               const glm::vec3 &colour = {1, 1, 1}, const std::string &texture = "",
+                               const std::string &normalMap = "", const std::string &highMap = "");
 };
 
 #endif /* Object_hpp */

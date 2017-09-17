@@ -33,14 +33,15 @@ protected:
     
 public:
     Frame();
-    Frame(glm::vec3 position, glm::vec3 target, glm::vec3 verticalAxis, glm::vec3 speed, glm::vec3 rotationSpeed, float scale = 1);
+    Frame(const glm::vec3 &position, const glm::vec3 &target, const glm::vec3 &verticalAxis, const glm::vec3 &speed,
+          const glm::vec3 &rotationSpeed, float scale = 1);
     virtual ~Frame();
     
     void update();//change position and look toward target if they are attached
     void move(FrameMove direction, float time = 1);//uses speed which is multiplyed by "time"
     
     void rotate(float yaw, float pitch, float roll);
-    virtual void rotate(glm::vec3 axis, float angle);
+    virtual void rotate(const glm::vec3 &axis, float angle);
     void rotate(FrameMove rotation, float time);//uses the rotationSpeed which is multiplyed by "time". Rotate trigonomicaly, use negative "time" to rotate clockwise.
     
     void lookAt(glm::mat4 &mat);
@@ -48,7 +49,7 @@ public:
     void toMatrix(glm::mat4 &mat);
     virtual glm::mat4 toMatrix();//return the matrix of the coordinate system
     
-    virtual void lookTowardTarget(glm::vec3 target, glm::vec3 verticalAxis);
+    virtual void lookTowardTarget(const glm::vec3 &target, const glm::vec3 &verticalAxis);
     void attachTarget(glm::vec3 (*target)());//automaticaly look toward the attachedTarget when update()
     void dettachTarget();
     bool targetAttached();
@@ -57,11 +58,11 @@ public:
     void dettachPosition();
     bool positionAttached();
     
-    void setPosition(glm::vec3 position);
+    void setPosition(const glm::vec3 &position);
     glm::vec3 getPosition();
-    void setSpeed(glm::vec3 speed);
+    void setSpeed(const glm::vec3 &speed);
     glm::vec3 getSpeed();
-    void setRotationSpeed(glm::vec3 rotationSpeed);
+    void setRotationSpeed(const glm::vec3 &rotationSpeed);
     glm::vec3 getRotationSpeed();
     
     void setScale(float scale);

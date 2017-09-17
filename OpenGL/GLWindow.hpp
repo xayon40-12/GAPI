@@ -20,26 +20,29 @@ private:
 protected:
     SDL_GLContext context;
     int major, minor;
-    
-    virtual void create();
+
+    void create() override;
 public:
     GLWindow(std::string title, int width, int height, bool visible = true, int major = 2, int minor = 1);
-    ~GLWindow();
+    ~GLWindow() override;
     
     static void initOpenGL(int major = 2, int minor = 1);
     
     //************************ Graphics ************************
-    
-    virtual void clear();
-    
-    virtual void setColour(Colour c);
-    
-    virtual void drawRect(int x, int y, int w, int h);
-    virtual void fillRect(int x, int y, int w, int h);
-    virtual void drawLine(int x1, int y1, int x2, int y2);
-    virtual void drawPoint(int x, int y);
-    
-    virtual void present();
+
+    void clear() override;
+
+    void setColour(const Colour &c) override;
+
+    void drawRect(int x, int y, int w, int h) override;
+
+    void fillRect(int x, int y, int w, int h) override;
+
+    void drawLine(int x1, int y1, int x2, int y2) override;
+
+    void drawPoint(int x, int y) override;
+
+    void present() override;
 };
 
 #endif /* GLWindows_hpp */

@@ -24,14 +24,14 @@ private:
 public:
     Thread();
     virtual ~Thread();
-    bool start(std::string name = "");// start run() in a nex thread
+    bool start(const std::string &name = "");// start run() in a nex thread
     void join();// wait run() to finish
     void setAutoDelete(bool autoDelete);//if your threaded class is a pointer it will be auto delete if you set autodelete to true
     
     bool threadRunning();
     
-    void lockMutex(std::string name);
-    bool unlockMutex(std::string name);
+    void lockMutex(const std::string &name);
+    bool unlockMutex(const std::string &name);
     
     static void sleep(long long t);
     static void sleepMillis(long long t);

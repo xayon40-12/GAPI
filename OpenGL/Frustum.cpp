@@ -22,13 +22,11 @@ Frustum::Frustum(glm::mat4 matrix){
         planes[i] = {n/l, v.w/l};//
     }
 }
-Frustum::~Frustum(){
-    
-}
+Frustum::~Frustum() = default;
 
-bool Frustum::collide(glm::vec3 pos, float radius){
-    for(int i = 0;i<6;i++){
-        if(glm::dot(planes[i].normal, pos)+planes[i].w+radius <= 0)
+bool Frustum::collide(const glm::vec3 &pos, float radius){
+    for (auto &plane : planes) {
+        if(glm::dot(plane.normal, pos)+ plane.w+radius <= 0)
             return false;
     }
     return true;

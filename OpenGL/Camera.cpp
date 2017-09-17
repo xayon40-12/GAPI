@@ -13,14 +13,13 @@ Camera::Camera() : Frame(){
     
     lookTowardTarget(glm::vec3(0, 0, -1), glm::vec3(0, 1, 0));
 }
-Camera::Camera(glm::vec3 position, glm::vec3 target, glm::vec3 verticalAxis, glm::vec3 speed, glm::vec3 rotationSpeed, bool verticalFree) : Frame(position, target, verticalAxis, speed, rotationSpeed), verticalFree(verticalFree){
+Camera::Camera(const glm::vec3 &position, const glm::vec3 &target, const glm::vec3 &verticalAxis,
+               const glm::vec3 &speed, const glm::vec3 &rotationSpeed, bool verticalFree) : Frame(position, target, verticalAxis, speed, rotationSpeed), verticalFree(verticalFree){
     initMapping();
     
     lookTowardTarget(target, verticalAxis);
 }
-Camera::~Camera(){
-    
-}
+Camera::~Camera() = default;
 
 void Camera::initMapping(){
     mapping[UP] = SDLK_SPACE;
@@ -42,7 +41,7 @@ void Camera::initMapping(){
 }
 
 void Camera::move(){
-    if(attachedPosition != 0){
+    if(attachedPosition != nullptr){
         pos = (*attachedPosition)();
     }else{
         if(Keyboard::isKeyHeld(mapping[FORWARD])) pos += Z*speed.z;
@@ -53,7 +52,7 @@ void Camera::move(){
         if(Keyboard::isKeyHeld(mapping[DOWN])) pos -= Y*speed.y;
     }
     
-    if(attachedTarget != 0){
+    if(attachedTarget != nullptr){
         lookTowardTarget((*attachedTarget)(), Y);
     }else{
         inputRotate(YAW);
@@ -93,7 +92,7 @@ void Camera::mapRotation(FrameMove mapping, SDL_Keycode key1, SDL_Keycode key2){
     mappingRotation[mapping] = {key1, key2};
 }
 
-void Camera::rotate(glm::vec3 axis, float angle){
+void Camera::rotate(const glm::vec3 &axis, float angle){
     if(axis == Z && !verticalFree) return;
     auto rot = glm::rotate(angle, axis);
     if(X != axis) X = glm::vec3(rot*glm::vec4(X, 0));
@@ -103,7 +102,7 @@ void Camera::rotate(glm::vec3 axis, float angle){
         Z = glm::normalize((glm::dot(Z, Y)>0?1.0f:-1.0f)*Y+0.01f*glm::cross(X, Y));
     }
 }
-void Camera::lookTowardTarget(glm::vec3 target, glm::vec3 verticalAxis){
+void Camera::lookTowardTarget(const glm::vec3 &target, const glm::vec3 &verticalAxis){
     Y = verticalAxis;
     Y = glm::normalize(Y);
     Z = target-pos;

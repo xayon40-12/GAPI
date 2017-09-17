@@ -4,9 +4,7 @@
 
 #include "P.hpp"
 
-P::P(){
-
-}
+P::P() = default;
 
 void P::inc(){
     lockMutex("i");

@@ -62,7 +62,7 @@ private:
     SDL_Surface* glGetTexture() const;
 
 public:
-    Texture(std::string imageFile, GLuint minFilter = GL_NEAREST, GLuint magFilter = GL_NEAREST);
+    explicit Texture(const std::string &imageFile, GLuint minFilter = GL_NEAREST, GLuint magFilter = GL_NEAREST);
     Texture(int width, int height, GLenum format, GLenum internalFormat, GLuint minFilter = GL_NEAREST, GLuint magFilter = GL_NEAREST);
     Texture(Texture const &toCopy);
     Texture& operator=(Texture const &toCopy);
@@ -71,7 +71,7 @@ public:
     bool load();
     void setImageFile(const std::string &imageFile);
 
-    void savePNG(std::string file);//extention .png is automatic don't put it
+    void savePNG(const std::string &file);//extention .png is automatic don't put it
 
     void verticalReverse();
     void horizontalReverse();

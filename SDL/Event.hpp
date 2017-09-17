@@ -37,8 +37,8 @@ protected:
     static std::unordered_map<Sint32, Uint8> toUpdatekeys;
     
 public:
-    Event();//init window.  Use a static instance of event to init and quit automaticaly the sdl (ex: at the begining of the main so it quit automaticaly when the program end)
-    virtual ~Event();//quit sdl
+    Event();
+    virtual ~Event();
     
     static void initWindow();
     static void endWindow();
