@@ -23,6 +23,8 @@ protected:
     int width, height;
     bool visible;
     bool closed;
+
+    CloseOperation operation;
     
     virtual void create();
     //Window(bool GL, std::string title, int width, int height, bool visible = true);
@@ -39,6 +41,7 @@ public:
     int getWidth();
     int getHeight();
     Uint32 getID();
+    CloseOperation getDefaultCloseOperation();
     
     void close();
     bool isClosed();
@@ -52,6 +55,7 @@ public:
     void setFullscreen(bool fullscreen);
     void setVsync(bool enable);
     void setPosition(int x, int y);
+
     
     //************************ Graphics ************************
     

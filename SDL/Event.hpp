@@ -25,7 +25,6 @@ private:
     static bool autoUpdate;
     static SDL_Event event;
 protected:
-    CloseOperation operation;
     static std::unordered_map<Uint32, Window*> windows;
     static int activeWindow;
     

@@ -35,7 +35,7 @@ void Event::update(){
     m_yrel = 0;
     while(SDL_PollEvent(&event)){
         if(event.window.event == SDL_WINDOWEVENT_CLOSE){
-            if(windows[event.window.windowID]->operation == EXIT_ON_CLOSE){
+            if(windows[event.window.windowID]->getDefaultCloseOperation() == EXIT_ON_CLOSE){
                 windows[event.window.windowID]->close();
             }
         }
@@ -71,7 +71,7 @@ void Event::update(){
     SDL_GetGlobalMouseState(&m_xOnScreen, &m_yOnScreen);
 }
 
-Event::Event(): operation(EXIT_ON_CLOSE) {
+Event::Event() {
 
 }
 

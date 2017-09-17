@@ -9,11 +9,10 @@
 #include "Window.hpp"
 #include "../OpenGL/GLWindow.hpp"
 
-Window::Window(std::string const &title, int width, int height, bool visible, bool GL) : Event(), win(nullptr), winID(0), renderer(
-        nullptr),
-                                                                                  title(title), width(width),
-                                                                                  height(height), visible(visible),
-                                                                                  closed(false){
+Window::Window(std::string const &title, int width, int height, bool visible, bool GL) : Event(), win(nullptr),
+    winID(0), renderer(nullptr), title(title), width(width), height(height), visible(visible), closed(false),
+    operation(EXIT_ON_CLOSE){
+
     if(!GL)
         create();
 }
@@ -30,9 +29,9 @@ void Window::create(){
     windows[winID] = this;
     activeWindow = winID;
     operation = EXIT_ON_CLOSE;
-    
+
     renderer = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-    
+
     update();
 }
 
@@ -59,6 +58,10 @@ int Window::getHeight(){
 }
 Uint32 Window::getID(){
     return winID;
+}
+
+CloseOperation Window::getDefaultCloseOperation(){
+    return operation;
 }
 
 void Window::close(){
