@@ -13,6 +13,7 @@
 #include <SDL.h>
 #include <map>
 #include <vector>
+#include <unordered_map>
 
 class Window;
 
@@ -25,13 +26,15 @@ private:
     static SDL_Event event;
 protected:
     CloseOperation operation;
-    static std::map<Uint32, Window*> windows;
+    static std::unordered_map<Uint32, Window*> windows;
     static int activeWindow;
     
     static int m_x, m_y, m_xrel, m_yrel, m_xOnScreen, m_yOnScreen, m_xWheel, m_yWheel;
     static Uint8 buttons[20];
+    static std::unordered_map<Sint32, Uint8> toUpdateButtons;// TODO use toUpdateButtons for the passage from pressed to hold and update after
     static int maxButtons;
-    static std::map<Sint32, Uint8> keys;
+    static std::unordered_map<Sint32, Uint8> keys;//TODO change to normal array
+    static std::unordered_map<Sint32, Uint8> toUpdatekeys;
     
     static void internalUpdate();
     

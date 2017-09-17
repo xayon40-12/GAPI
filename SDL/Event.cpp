@@ -10,14 +10,16 @@
 #include "Window.hpp"
 
 int Event::activeWindow = 0;
-std::map<Uint32, Window*> Event::windows;
+std::unordered_map<Uint32, Window*> Event::windows;
 
 bool Event::autoUpdate = false;
 
 SDL_Event Event::event;
 Uint8 Event::buttons[20];
+std::unordered_map<Sint32, Uint8> Event::toUpdateButtons;
 int Event::maxButtons = sizeof(Event::buttons)/sizeof(Uint8);
-std::map<Sint32, Uint8> Event::keys;
+std::unordered_map<Sint32, Uint8> Event::keys;
+std::unordered_map<Sint32, Uint8> Event::toUpdatekeys;
 
 int Event::m_x, Event::m_y, Event::m_xrel, Event::m_yrel, Event::m_xOnScreen, Event::m_yOnScreen, Event::m_xWheel = 0, Event::m_yWheel = 0;
 
@@ -31,8 +33,6 @@ Event::~Event(){
 
 void Event::initWindow(){
     SDL_Init(SDL_INIT_VIDEO);
-    for(auto k = keys.begin();k!=keys.end();k++)
-        k->second = IDLE;
 }
 void Event::endWindow(){
     SDL_Quit();
