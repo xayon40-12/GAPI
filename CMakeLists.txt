@@ -17,14 +17,11 @@ include_directories(${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIR} ${RESSOURCES_P
 
 set(CMAKE_CXX_STANDARD 11)#la je ne suis pas sur mais je pense que ca active C++11
 
-set(CMAKE_CXX_FLAGS_DEBUG "-DDEBUG")
-#if(CMAKE_BUILD_TYPE MATCHES Debug)
-#    target_compile_definitions(XML_Parser PUBLIC DEBUG=1)
-#elseif(CMAKE_BUILD_TYPE MATCHES Release)
-#    target_compile_definitions(XML_Parser PUBLIC DEBUG=0)
-#endif()
+if(CMAKE_BUILD_TYPE MATCHES Debug)
+    set(CMAKE_CXX_FLAGS_DEBUG "-DDEBUG")
+endif()
 
-set(SOURCE_FILES main.cpp OpenGL/Camera.cpp SDL/Colour.cpp SDL/Event.cpp Fen2.cpp Fenetre.cpp OpenGL/Frame.cpp OpenGL/FrameBuffer.cpp OpenGL/Frustum.cpp OpenGL/GLWindow.cpp SDL/Keyboard.cpp SDL/Mouse.cpp OpenGL/Object.cpp OpenGL/Shader.cpp Tools/Sound.cpp OpenGL/Texture.cpp Tools/Thread.cpp Tools/Vec.cpp SDL/Window.cpp P.cpp P.hpp)#ici on met tout les cpp qu'il faut compiler (ca ajoute normalement tout seul si tu creer les fichier directe dans CLion mais si tu en rajoute a la main ca va etre la qu'il faut les mettre je pense, les un après les autres séparés par un espace)
-add_executable(GAPI ${SOURCE_FILES})#la ca dit le nom qu'aura l'éxécutable puis les sources (cpp) qu'il doit utiliser (un peut comme g++ -o nomExecutable fichier1.cpp fichier2.cpp ...)
+set(SOURCE_FILES OpenGL/Camera.cpp SDL/Colour.cpp SDL/Event.cpp OpenGL/Frame.cpp OpenGL/FrameBuffer.cpp OpenGL/Frustum.cpp OpenGL/GLWindow.cpp SDL/Keyboard.cpp SDL/Mouse.cpp OpenGL/Object.cpp OpenGL/Shader.cpp Tools/Sound.cpp OpenGL/Texture.cpp Tools/Thread.cpp Tools/Vec.cpp SDL/Window.cpp Tools/Tools.hpp SDL/SDL.hpp OpenGL/OpenGL.hpp)#ici on met tout les cpp qu'il faut compiler (ca ajoute normalement tout seul si tu creer les fichier directe dans CLion mais si tu en rajoute a la main ca va etre la qu'il faut les mettre je pense, les un après les autres séparés par un espace)
+add_library(GAPI STATIC ${SOURCE_FILES} GAPI.hpp)
 
 target_link_libraries(GAPI ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARY} ${OPENGL_LIBRARY})#ici je lui dis à quel
