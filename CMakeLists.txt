@@ -12,6 +12,7 @@ set(CMAKE_MODULE_PATH ${RESSOURCES_PATH}/CMake)
 find_package(SDL2)#ici je lui dit de charger le fichier FindSDL2.cmake
 find_package(SDL2_image)#ici je lui dit de charger le fichier FindSDL2_image.cmake  (en gros c'est find_package(nomLib) et ca cherche "Find+nomLib+.cmake")
 find_package(OPENGL)
+find_package(OPENCL)
 #les .cmake vont créer plein de racoursis crossplateform pour nous que l'on utilise ensuite
 include_directories(${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIR} ${RESSOURCES_PATH})#ici je lui dit ou sont les headers avec les valeurs fourni par les .cmake charger juste avant (tu trouve les nom dans les .cmake au niveau du "FIND_PATH(SDL2_INCLUDE_DIR SDL.h ...)" c'est le nom juste après FIND_PATH)
 
@@ -21,7 +22,7 @@ if(CMAKE_BUILD_TYPE MATCHES Debug)
     set(CMAKE_CXX_FLAGS_DEBUG "-DDEBUG")
 endif()
 
-set(SOURCE_FILES OpenGL/Camera.cpp SDL/Colour.cpp SDL/Event.cpp OpenGL/Frame.cpp OpenGL/FrameBuffer.cpp OpenGL/Frustum.cpp OpenGL/GLWindow.cpp SDL/Keyboard.cpp SDL/Mouse.cpp OpenGL/Object.cpp OpenGL/Shader.cpp Tools/Sound.cpp OpenGL/Texture.cpp Tools/Thread.cpp Tools/Vec.cpp SDL/Window.cpp Tools/Tools.hpp SDL/SDL.hpp OpenGL/OpenGL.hpp)#ici on met tout les cpp qu'il faut compiler (ca ajoute normalement tout seul si tu creer les fichier directe dans CLion mais si tu en rajoute a la main ca va etre la qu'il faut les mettre je pense, les un après les autres séparés par un espace)
-add_library(GAPI STATIC ${SOURCE_FILES} GAPI.hpp)
+set(SOURCE_FILES OpenGL/Camera.cpp SDL/Colour.cpp SDL/Event.cpp OpenGL/Frame.cpp OpenGL/FrameBuffer.cpp OpenGL/Frustum.cpp OpenGL/GLWindow.cpp SDL/Keyboard.cpp SDL/Mouse.cpp OpenGL/Object.cpp OpenGL/Shader.cpp Tools/Sound.cpp OpenGL/Texture.cpp Tools/Thread.cpp Tools/Vec.cpp SDL/Window.cpp Tools/Tools.hpp SDL/SDL.hpp OpenGL/OpenGL.hpp OpenCL/OpenCL.cpp OpenCL/OpenCL.hpp GAPI.hpp)#ici on met tout les cpp qu'il faut compiler (ca ajoute normalement tout seul si tu creer les fichier directe dans CLion mais si tu en rajoute a la main ca va etre la qu'il faut les mettre je pense, les un après les autres séparés par un espace)
+add_library(GAPI STATIC ${SOURCE_FILES})
 
-target_link_libraries(GAPI ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARY} ${OPENGL_LIBRARY})#ici je lui dis à quel
+target_link_libraries(GAPI ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARY} ${OPENGL_LIBRARY} ${OpenCL_LIBRARY})#ici je lui dis à quel
