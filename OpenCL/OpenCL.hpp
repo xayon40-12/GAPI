@@ -44,7 +44,7 @@ public:
     
     virtual bool init(cl_device_type type = CL_DEVICE_TYPE_GPU);// CL_DEVICE_TYPE_GPU CL_DEVICE_TYPE_CPU
     bool buildProgram(std::string source, std::string funcName);//WARNING: all Mem must be added before creating the program
-    void compute(std::vector<size_t> globalWorkSize);
+    virtual bool compute(std::vector<size_t> globalWorkSize);
     void readData();
     
     //add memories in the right order (parametre order)

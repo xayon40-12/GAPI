@@ -93,10 +93,12 @@ bool OpenCL::buildProgram(string source, string funcName){
 
     return true;
 }
-void OpenCL::compute(std::vector<size_t> globalWorkSize){
-    if(globalWorkSize.size()==0)return;
+bool OpenCL::compute(std::vector<size_t> globalWorkSize){
+    if(globalWorkSize.size()==0)return false;
 
-    clEnqueueNDRangeKernel (queue, kernel, (cl_uint)globalWorkSize.size(), 0, globalWorkSize.data(), 0, 0, nullptr, nullptr);
+    cl_int error;
+    error = clEnqueueNDRangeKernel (queue, kernel, (cl_uint)globalWorkSize.size(), 0, globalWorkSize.data(), 0, 0, nullptr, nullptr);
+    return error == CL_SUCCESS;
 }
 void OpenCL::readData(){
     for(Mem mem:mems)
