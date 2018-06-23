@@ -29,10 +29,7 @@ struct Mem{
 };
 
 class OpenCL{
-private:
-    std::vector<std::string> platforms;
-    std::vector<Device> devices;
-    std::vector<cl_device_id> deviceIds;
+protected:
     std::vector<Mem> mems;
     cl_context context;
     cl_program program;
@@ -45,9 +42,9 @@ public:
     OpenCL();
     ~OpenCL();
     
-    bool init(cl_device_type type = CL_DEVICE_TYPE_GPU);// CL_DEVICE_TYPE_GPU CL_DEVICE_TYPE_CPU
-    bool buildProgram(std::string source, std::string funcName);
-    void compute(std::initializer_list<size_t> globalWorkSize);
+    virtual bool init(cl_device_type type = CL_DEVICE_TYPE_GPU);// CL_DEVICE_TYPE_GPU CL_DEVICE_TYPE_CPU
+    bool buildProgram(std::string source, std::string funcName);//WARNING: all Mem must be added before creating the program
+    void compute(std::vector<size_t> globalWorkSize);
     void readData();
     
     //add memories in the right order (parametre order)
@@ -56,7 +53,8 @@ public:
     template<typename T>
     bool addMem(T & data, std::string readWrite = "");
     bool addMem(void *data, size_t length, std::string readWrite = "");
-    bool setMem(int index, void *data);
+    bool setMem(int index, void *data, size_t offset = 0, size_t nbBytes = 0);//if offset and nbBytes are not set, the
+            // whole memory wile be overwritten with the size of the original one
 };
 
 

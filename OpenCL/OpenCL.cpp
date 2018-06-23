@@ -25,43 +25,34 @@ OpenCL::~OpenCL(){
 }
 
 bool OpenCL::init(cl_device_type type){
+    cl_int error;
     cl_uint platformIdCount = 0;
     clGetPlatformIDs (0, nullptr, &platformIdCount);
     if(platformIdCount == 0)return false;
-    vector<cl_platform_id> platformIds (platformIdCount);
+    std::vector<cl_platform_id> platformIds (platformIdCount);
     clGetPlatformIDs (platformIdCount, platformIds.data(), nullptr);
-    
-    char info[50];
-    size_t size;
-    for(cl_platform_id id: platformIds){
-        clGetPlatformInfo(id, CL_PLATFORM_NAME, sizeof(info), &info, &size);
-        platforms.push_back(string(info));
+
+    for(cl_platform_id platformId: platformIds){
+        cl_uint deviceIdCount = 0;
+        clGetDeviceIDs (platformId, type, 0, nullptr, &deviceIdCount);
+        if(deviceIdCount == 0)continue;
+
+        std::vector<cl_device_id> deviceIds(deviceIdCount);
+        clGetDeviceIDs (platformId, type, deviceIdCount, deviceIds.data(), nullptr);
+
+        cl_context_properties contextProperties[] = {CL_CONTEXT_PLATFORM, (cl_context_properties) platformId, 0, 0};
+
+        for(auto deviceId: deviceIds){
+            device = deviceId;
+            context = clCreateContext(contextProperties, 1, &device, 0, 0, &error);
+            if(error == CL_SUCCESS){
+                queue = clCreateCommandQueue(context, device, CL_QUEUE_PROFILING_ENABLE, &error);
+                if(error == CL_SUCCESS)return true;
+            }
+        }
     }
     
-    cl_uint deviceIdCount = 0;
-    clGetDeviceIDs (platformIds [0], CL_DEVICE_TYPE_ALL, 0, nullptr, &deviceIdCount);
-    if(deviceIdCount == 0)return false;
-    for(int i = 0; i<deviceIdCount;i++)
-        deviceIds.push_back(cl_device_id());
-    clGetDeviceIDs (platformIds [0], CL_DEVICE_TYPE_ALL, deviceIdCount, deviceIds.data(), nullptr);
-    cl_device_type t;
-    device = deviceIds[0];
-    for(cl_device_id id: deviceIds){
-        clGetDeviceInfo(id, CL_DEVICE_NAME, sizeof(info), &info, &size);
-        clGetDeviceInfo(id, CL_DEVICE_TYPE, sizeof(t), &t, &size);
-        devices.push_back({string(info), t});
-        if(t == type) device = id;
-    }
-    
-    const cl_context_properties contextProperties [] = {
-        CL_CONTEXT_PLATFORM, reinterpret_cast<cl_context_properties> (platformIds [0]), 0, 0};
-    cl_int error;
-    context = clCreateContext(contextProperties, deviceIdCount, deviceIds.data(), nullptr, nullptr, &error);
-    if(error != CL_SUCCESS)return false;
-    queue = clCreateCommandQueue(context, device, CL_QUEUE_PROFILING_ENABLE, &error);
-    if(error != CL_SUCCESS)return false;
-    
-    return true;
+    return false;
 }
 
 bool OpenCL::buildProgram(string source, string funcName){
@@ -79,7 +70,7 @@ bool OpenCL::buildProgram(string source, string funcName){
     tab[0] = 0;
     delete[] tab;
     if(error != CL_SUCCESS)return false;
-    error = clBuildProgram (program, (cl_uint)deviceIds.size(), deviceIds.data(), nullptr, nullptr, nullptr);
+    error = clBuildProgram (program, 1, &device, nullptr, nullptr, nullptr);
      // build info
     cl_build_status status;
     clGetProgramBuildInfo(program, device, CL_PROGRAM_BUILD_STATUS, sizeof(cl_build_status), &status, NULL);
@@ -95,17 +86,17 @@ bool OpenCL::buildProgram(string source, string funcName){
     
     kernel = clCreateKernel (program, funcName.c_str(), &error);
     if(error != CL_SUCCESS)return false;
-    
-    return true;
-}
-void OpenCL::compute(initializer_list<size_t> globalWorkSize){
-    vector<size_t> sizes;
-    for(size_t s: globalWorkSize)
-        sizes.push_back(s);
-    if(globalWorkSize.size()==0)return;
+
+    //set the mem to the corresponding argument of the kernel
     for(int i = 0;i<mems.size();i++)
         clSetKernelArg (kernel, i, sizeof(cl_mem), &mems[i].mem);
-    clEnqueueNDRangeKernel (queue, kernel, (cl_uint)sizes.size(), 0, sizes.data(), 0, 0, nullptr, nullptr);
+
+    return true;
+}
+void OpenCL::compute(std::vector<size_t> globalWorkSize){
+    if(globalWorkSize.size()==0)return;
+
+    clEnqueueNDRangeKernel (queue, kernel, (cl_uint)globalWorkSize.size(), 0, globalWorkSize.data(), 0, 0, nullptr, nullptr);
 }
 void OpenCL::readData(){
     for(Mem mem:mems)
@@ -147,9 +138,9 @@ bool OpenCL::addMem(void *data, size_t length, string readWrite){
     return true;
 }
 
-bool OpenCL::setMem(int index, void *data){
+bool OpenCL::setMem(int index, void *data, size_t offset, size_t nbBytes){
     Mem &m = mems[index];
-    cl_int error = clEnqueueWriteBuffer(queue, m.mem, CL_TRUE, 0, m.length, data, 0, NULL, NULL);
+    cl_int error = clEnqueueWriteBuffer(queue, m.mem, CL_TRUE, offset, nbBytes>0?nbBytes:m.length, data, 0, NULL, NULL);
     if(error != CL_SUCCESS){
         std::cout << "write error : " << error << std::endl;
         return false;
