@@ -63,7 +63,7 @@ private:
 
 public:
     explicit Texture(const std::string &imageFile, GLuint minFilter = GL_NEAREST, GLuint magFilter = GL_NEAREST);
-    Texture(int width, int height, GLenum format, GLenum internalFormat, GLuint minFilter = GL_NEAREST, GLuint magFilter = GL_NEAREST);
+    Texture(int width, int height, GLenum format = GL_RGBA, GLenum internalFormat = GL_RGBA, GLuint minFilter = GL_NEAREST, GLuint magFilter = GL_NEAREST);
     Texture(Texture const &toCopy);
     Texture& operator=(Texture const &toCopy);
     ~Texture();
@@ -76,7 +76,7 @@ public:
     void verticalReverse();
     void horizontalReverse();
 
-    void use(int textureIndex);//bind the texture to the shader, call it only once until you use remove()
+    void use(int textureIndex = 0);//bind the texture to the shader, call it only once until you use remove()
     void remove();//when finish using the texture call remove() to unbind the texture from the shader
 
     void setFilter(GLuint minFilter, GLuint magFilter);//GL_NEAREST   GL_LINEAR

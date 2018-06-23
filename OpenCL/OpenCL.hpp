@@ -43,7 +43,7 @@ public:
     ~OpenCL();
     
     virtual bool init(cl_device_type type = CL_DEVICE_TYPE_GPU);// CL_DEVICE_TYPE_GPU CL_DEVICE_TYPE_CPU
-    bool buildProgram(std::string source, std::string funcName);//WARNING: all Mem must be added before creating the program
+    virtual bool buildProgram(std::string source, std::string funcName);//WARNING: all Mem must be added before creating the program
     virtual bool compute(std::vector<size_t> globalWorkSize);
     void readData();
     

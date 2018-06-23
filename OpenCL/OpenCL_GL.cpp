@@ -69,6 +69,16 @@ bool OpenCL_GL::compute(std::vector<size_t> globalWorkSize) {
     return true;
 }
 
+bool OpenCL_GL::buildProgram(std::string source, std::string funcName) {
+    if(!OpenCL::buildProgram(source, funcName)) return false;
+
+    int offset = mems.size();
+    for(int i = 0;i<sharedObjects.size();i++)
+        clSetKernelArg (kernel, offset+i, sizeof(cl_mem), &sharedObjects[i]);
+
+    return true;
+}
+
 bool OpenCL_GL::addTexture(Texture &texture, std::string readWrite) {
     cl_int error;
     cl_mem_flags flag = 0;
@@ -82,7 +92,7 @@ bool OpenCL_GL::addTexture(Texture &texture, std::string readWrite) {
 
     cl_mem mem = clCreateFromGLTexture(context, flag, GL_TEXTURE_2D, 0, texture.getID(), &error);
     if(error != CL_SUCCESS){
-        std::cout << "error : " << error << std::endl;
+        std::cout << "error while creating clMemory from GL texture: " << error << std::endl;
         return false;
     }
 
