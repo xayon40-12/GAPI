@@ -55,7 +55,12 @@ bool OpenCL_GL::compute(std::vector<size_t> globalWorkSize) {
         error = clEnqueueAcquireGLObjects(queue, sharedObjects.size(), sharedObjects.data(), 0, NULL, NULL);
         if(error != CL_SUCCESS) return false;
 
-        if(!OpenCL::compute(globalWorkSize)) return false;
+        if(!OpenCL::compute(globalWorkSize)) {
+            // Before returning the objects to OpenGL, we sync to make sure OpenCL is done.
+            clEnqueueReleaseGLObjects(queue, sharedObjects.size(), sharedObjects.data(), 0, NULL, NULL);
+            clFinish(queue);
+            return false;
+        }
 
         // Before returning the objects to OpenGL, we sync to make sure OpenCL is done.
         error = clEnqueueReleaseGLObjects(queue, sharedObjects.size(), sharedObjects.data(), 0, NULL, NULL);

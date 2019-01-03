@@ -56,7 +56,7 @@ bool OpenCL::init(cl_device_type type){
 }
 
 bool OpenCL::buildProgram(string source, string funcName){
-    if(source.find(".cl")){
+    if(source.find(".cl") != -1){
         std::ifstream in(source);
         std::string str((std::istreambuf_iterator<char>(in)), (std::istreambuf_iterator<char>()));
         source = str;
